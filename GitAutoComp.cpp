@@ -5,6 +5,7 @@
 #include "guid.hpp"
 #include "GitAutoComp.hpp"
 #include <git2.h>
+#include "Trie.hpp"
 
 #include <assert.h>
 
@@ -136,6 +137,10 @@ static string wcstringtombstring(wstring wstr) {
     return result;
 }
 
+static wstring mbstringtowcstring(string str) {
+    return wstring(str.begin(), str.end());
+}
+
 static git_repository* OpenGitRepo(wstring dir) {
     string dirForGit = wcstringtombstring(dir);
     if (dirForGit.length() == 0) {
@@ -197,6 +202,23 @@ static wstring GetUserPrefix(CmdLine cmdLine) {
     return cmdLine.line.substr(prefixStart, prefixEnd - prefixStart + 1);
 }
 
+static void InsertInCurPos(CmdLine &cmdLine, string str) {
+    cmdLine.line.insert((size_t)cmdLine.curPos, mbstringtowcstring(str));
+    cmdLine.curPos += (int)str.length();
+}
+
+static void InsertAndSelectNextSuggestion(CmdLine &cmdLine, vector<string> &suitableRefs) {
+    wstring currentSuggestion = cmdLine.line.substr(cmdLine.selectionStart, cmdLine.selectionEnd - cmdLine.selectionStart);
+
+}
+
+static void SetCmdLine(CmdLine cmdLine) {
+    Info.PanelControl(PANEL_ACTIVE, FCTL_SETCMDLINE, 0, (void*)cmdLine.line.c_str());
+    Info.PanelControl(PANEL_ACTIVE, FCTL_SETCMDLINEPOS, cmdLine.curPos, nullptr);
+    struct CmdLineSelect selection = { sizeof(selection), cmdLine.selectionStart, cmdLine.selectionEnd };
+    Info.PanelControl(PANEL_ACTIVE, FCTL_SETCMDLINESELECTION, 0, &selection);
+}
+
 /*
   Функция OpenPluginW вызывается при создании новой копии плагина.
 */
@@ -249,6 +271,22 @@ HANDLE WINAPI OpenW(const struct OpenInfo *OInfo)
     for_each(suitableRefs.begin(), suitableRefs.end(), [](string s) {
         logFile << "Suitable ref: " << s.c_str() << endl;
     });
+
+    Trie *trie = trie_create();
+    for_each(suitableRefs.begin(), suitableRefs.end(), [trie](string s) {
+        trie_add(trie, s);
+    });
+    string maxCommonPart = trie_get_common_prefix(trie);
+    trie_free(trie);
+
+    if (maxCommonPart.length() > 0) {
+        assert(StartsWith(maxCommonPart.c_str(), userPrefix.c_str()));
+        string suffix = maxCommonPart.substr(userPrefix.length());
+        InsertInCurPos(cmdLine, suffix);
+    } else  {
+        //InsertAndSelectNextSuggestion(cmdLine, suitableRefs);
+    }
+    SetCmdLine(cmdLine);
 
     git_repository_free(repo);
 
