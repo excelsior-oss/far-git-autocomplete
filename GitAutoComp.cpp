@@ -154,6 +154,49 @@ static git_repository* OpenGitRepo(wstring dir) {
     return repo;
 }
 
+static bool StartsWith(const char *str, const char *prefix) {
+    return strstr(str, prefix) == str;
+}
+
+static void FilterReference(const char *ref, const char *userPrefix, vector<string> &suitableRefs) {
+    if (StartsWith(ref, userPrefix)) {
+        suitableRefs.push_back(string(ref));
+    }
+}
+
+static void FilterReferences(const char *ref, const char *userPrefix, vector<string> &suitableRefs) {
+    const char *prefixes[] = { "refs/heads/", "refs/tags/", "refs/stash" };
+    const char *remotePrefix = "refs/remotes/";
+    for (int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]); ++i) {
+        if (StartsWith(ref, prefixes[i])) {
+            FilterReference(ref + strlen(prefixes[i]), userPrefix, suitableRefs);
+            return;
+        }
+    }
+    if (StartsWith(ref, remotePrefix)) {
+        const char *remoteRef = ref + strlen(remotePrefix);
+        FilterReference(remoteRef, userPrefix, suitableRefs);
+
+        const char *slashPtr = strchr(remoteRef, '/');
+        assert(slashPtr != nullptr);
+        FilterReference(slashPtr + 1, userPrefix, suitableRefs);
+        return;
+    }
+    logFile << "DropRefPrefix: unexpected ref = " << ref << endl;
+}
+
+static wstring GetUserPrefix(CmdLine cmdLine) {
+    int prefixStart = 0;
+    int prefixEnd = cmdLine.curPos - 1;
+    for (int i = prefixEnd; i >= 0; --i) {
+        if (iswspace(cmdLine.line.at(i))) {
+            prefixStart = i + 1;
+            break;
+        }
+    }
+    return cmdLine.line.substr(prefixStart, prefixEnd - prefixStart + 1);
+}
+
 /*
   Функция OpenPluginW вызывается при создании новой копии плагина.
 */
@@ -186,6 +229,8 @@ HANDLE WINAPI OpenW(const struct OpenInfo *OInfo)
         return INVALID_HANDLE_VALUE;
     }
 
+    string userPrefix = wcstringtombstring(GetUserPrefix(cmdLine));
+    logFile << "User prefix = \"" << userPrefix.c_str() << "\"" << endl;
     vector<string> suitableRefs;
     {
         git_reference_iterator *iter = NULL;
@@ -193,13 +238,14 @@ HANDLE WINAPI OpenW(const struct OpenInfo *OInfo)
 
         git_reference *ref;
         while (!(error = git_reference_next(&ref, iter))) {
-            suitableRefs.push_back(string(git_reference_name(ref)));
+            FilterReferences(git_reference_name(ref), userPrefix.c_str(), suitableRefs);
         }
         assert(error == GIT_ITEROVER);
     }
 
     // TODO: sort by date if settings
     sort(suitableRefs.begin(), suitableRefs.end());
+    suitableRefs.erase(unique(suitableRefs.begin(), suitableRefs.end()), suitableRefs.end());
     for_each(suitableRefs.begin(), suitableRefs.end(), [](string s) {
         logFile << "Suitable ref: " << s.c_str() << endl;
     });
