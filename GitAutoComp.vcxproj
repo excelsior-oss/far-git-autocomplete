@@ -43,10 +43,10 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Work\cypok\HackDay\2016_-_HackDay_V_-_Git_autocompletion_for_Far\libgit2-0.24.3\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\Work\cypok\HackDay\2016_-_HackDay_V_-_Git_autocompletion_for_Far\libgit2-0.24.3\build\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\build\Debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>git2.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -60,10 +60,10 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Work\cypok\HackDay\2016_-_HackDay_V_-_Git_autocompletion_for_Far\libgit2-0.24.3\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\Work\cypok\HackDay\2016_-_HackDay_V_-_Git_autocompletion_for_Far\libgit2-0.24.3\build\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\build\Debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>git2.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -77,10 +77,10 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Work\cypok\HackDay\2016_-_HackDay_V_-_Git_autocompletion_for_Far\libgit2-0.24.3\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\Work\cypok\HackDay\2016_-_HackDay_V_-_Git_autocompletion_for_Far\libgit2-0.24.3\build\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\build\Debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>git2.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -94,10 +94,10 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Work\cypok\HackDay\2016_-_HackDay_V_-_Git_autocompletion_for_Far\libgit2-0.24.3\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\Work\cypok\HackDay\2016_-_HackDay_V_-_Git_autocompletion_for_Far\libgit2-0.24.3\build\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\build\Debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>git2.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>

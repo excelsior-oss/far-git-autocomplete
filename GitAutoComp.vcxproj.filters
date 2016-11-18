@@ -37,16 +37,22 @@
     <ClInclude Include="GitAutoCompLng.hpp" />
     <ClInclude Include="guid.hpp" />
     <ClInclude Include="version.hpp" />
+    <ClInclude Include="GitAutoComp.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GitAutoCompLng.hpp" />
+    <ClInclude Include="guid.hpp" />
+    <ClInclude Include="version.hpp" />
+    <ClInclude Include="GitAutoComp.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GitAutoCompLng.hpp" />
+    <ClInclude Include="guid.hpp" />
+    <ClInclude Include="version.hpp" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="$(SrcRoot)plugins\common\vc_crt_fix.asm">
       <Filter>Source Files</Filter>
     </MASM>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="GitAutoCompW.gcc.def">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="GitAutoCompW.vc.def" />
   </ItemGroup>
 </Project>

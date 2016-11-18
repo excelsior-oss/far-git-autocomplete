@@ -22,7 +22,7 @@ const unsigned MAX_CMD_LINE = 4096;
 
 void WINAPI GetGlobalInfoW(struct GlobalInfo *GInfo)
 {
-    logFile.open("C:\\Work\\cypok\\HackDay\\2016_-_HackDay_V_-_Git_autocompletion_for_Far\\plugin_log.txt");
+    logFile.open("plugin_log.txt");
     logFile << L"I am started" << endl;
     // TODO: add time
 
@@ -183,6 +183,7 @@ HANDLE WINAPI OpenW(const struct OpenInfo *OInfo)
     git_repository *repo = OpenGitRepo(curDir);
     if (repo == nullptr) {
         logFile << "Git repo is not opened" << endl;
+        return INVALID_HANDLE_VALUE;
     }
 
     vector<string> suitableRefs;
