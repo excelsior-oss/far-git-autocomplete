@@ -1,0 +1,9 @@
+LIBRARY        GitAutoComp
+; DESCRIPTION    'GitAutoComp Far Plugin'
+EXPORTS
+  GetGlobalInfoW
+  SetStartupInfoW
+  GetPluginInfoW
+  OpenW
+  ExitFARW
+  ConfigureW
