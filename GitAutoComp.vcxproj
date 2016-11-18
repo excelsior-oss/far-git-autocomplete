@@ -19,6 +19,12 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Trie.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Trie.hpp" />
+  </ItemGroup>
   <PropertyGroup>
     <ProjectName>gitautocomp</ProjectName>
     <ProjectGuid>{A0EEDB6F-87F0-459A-94FF-C683CE2CE8C1}</ProjectGuid>

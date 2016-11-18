@@ -5,6 +5,9 @@
     <ClCompile Include="$(SrcRoot)plugins\common\vc_crt_fix_impl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Trie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GitAutoComp.hpp">
@@ -49,6 +52,21 @@
     <ClInclude Include="GitAutoCompLng.hpp" />
     <ClInclude Include="guid.hpp" />
     <ClInclude Include="version.hpp" />
+    <ClInclude Include="GitAutoComp.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GitAutoCompLng.hpp" />
+    <ClInclude Include="guid.hpp" />
+    <ClInclude Include="version.hpp" />
+    <ClInclude Include="GitAutoComp.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GitAutoCompLng.hpp" />
+    <ClInclude Include="guid.hpp" />
+    <ClInclude Include="version.hpp" />
+    <ClInclude Include="Trie.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <MASM Include="$(SrcRoot)plugins\common\vc_crt_fix.asm">
