@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(ProjectDir)..\..\_build\vc\config\common.filters" />
+  <ItemGroup>
+    <ClCompile Include="$(SrcRoot)plugins\common\vc_crt_fix_impl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GitAutoComp.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GitAutoCompLng.hpp" />
+    <ClInclude Include="guid.hpp" />
+    <ClInclude Include="version.hpp" />
+    <ClInclude Include="GitAutoComp.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GitAutoCompLng.hpp" />
+    <ClInclude Include="guid.hpp" />
+    <ClInclude Include="version.hpp" />
+    <ClInclude Include="GitAutoComp.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GitAutoCompLng.hpp" />
+    <ClInclude Include="guid.hpp" />
+    <ClInclude Include="version.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="GitAutoComp_ru.lng" />
+    <CustomBuild Include="GitAutoComp_en.hlf">
+      <Filter>Help Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GitAutoComp_ru.hlf" />
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="$(SrcRoot)plugins\common\vc_crt_fix.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GitAutoCompW.gcc.def">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="GitAutoCompW.vc.def" />
+  </ItemGroup>
+</Project>
