@@ -25,13 +25,18 @@
     <ClInclude Include="GitAutoCompLng.hpp" />
     <ClInclude Include="guid.hpp" />
     <ClInclude Include="version.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="GitAutoComp_ru.lng" />
-    <CustomBuild Include="GitAutoComp_en.hlf">
-      <Filter>Help Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="GitAutoComp_ru.hlf" />
+    <ClInclude Include="GitAutoComp.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GitAutoCompLng.hpp" />
+    <ClInclude Include="guid.hpp" />
+    <ClInclude Include="version.hpp" />
+    <ClInclude Include="GitAutoComp.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GitAutoCompLng.hpp" />
+    <ClInclude Include="guid.hpp" />
+    <ClInclude Include="version.hpp" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="$(SrcRoot)plugins\common\vc_crt_fix.asm">

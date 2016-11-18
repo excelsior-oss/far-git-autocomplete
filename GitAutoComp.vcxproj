@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
   <!-- VC2010 bug -->
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -20,13 +19,96 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-
   <PropertyGroup>
     <ProjectName>gitautocomp</ProjectName>
     <ProjectGuid>{A0EEDB6F-87F0-459A-94FF-C683CE2CE8C1}</ProjectGuid>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <OutDir>plugins\$(ProjectName)</OutDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PostBuildEventUseInBuild>
+    </PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PostBuildEventUseInBuild>
+    </PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PostBuildEventUseInBuild>
+    </PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PostBuildEventUseInBuild>
+    </PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Work\cypok\HackDay\2016_-_HackDay_V_-_Git_autocompletion_for_Far\libgit2-0.24.3\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>C:\Work\cypok\HackDay\2016_-_HackDay_V_-_Git_autocompletion_for_Far\libgit2-0.24.3\build\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>git2.lib</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>
+      </Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Work\cypok\HackDay\2016_-_HackDay_V_-_Git_autocompletion_for_Far\libgit2-0.24.3\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>C:\Work\cypok\HackDay\2016_-_HackDay_V_-_Git_autocompletion_for_Far\libgit2-0.24.3\build\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>git2.lib</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>
+      </Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Work\cypok\HackDay\2016_-_HackDay_V_-_Git_autocompletion_for_Far\libgit2-0.24.3\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>C:\Work\cypok\HackDay\2016_-_HackDay_V_-_Git_autocompletion_for_Far\libgit2-0.24.3\build\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>git2.lib</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>
+      </Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Work\cypok\HackDay\2016_-_HackDay_V_-_Git_autocompletion_for_Far\libgit2-0.24.3\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>C:\Work\cypok\HackDay\2016_-_HackDay_V_-_Git_autocompletion_for_Far\libgit2-0.24.3\build\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>git2.lib</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>
+      </Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
   <ImportGroup Label="PropertySheets">
     <Import Project="$(ProjectDir)..\..\_build\vc\config\common.props" />
   </ImportGroup>
