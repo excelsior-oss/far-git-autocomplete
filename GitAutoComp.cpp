@@ -102,6 +102,10 @@ static CmdLine GetCmdLine() {
     Info.PanelControl(PANEL_ACTIVE, FCTL_GETCMDLINESELECTION, 0, &selection);
 
     CmdLine result = {line, curPos, (int)selection.SelStart, (int)selection.SelEnd};
+    if (result.selectionStart == -1) {
+        assert(result.selectionEnd == 0);
+        result.selectionEnd = -1;
+    }
     return result;
 }
 
@@ -192,7 +196,13 @@ static void FilterReferences(const char *ref, const char *userPrefix, vector<str
 
 static wstring GetUserPrefix(CmdLine cmdLine) {
     int prefixStart = 0;
-    int prefixEnd = cmdLine.curPos - 1;
+    int prefixEnd;
+    if (cmdLine.curPos == cmdLine.selectionEnd) {
+        assert(cmdLine.selectionStart < cmdLine.selectionEnd);
+        prefixEnd = cmdLine.selectionStart - 1;
+    } else {
+        prefixEnd = cmdLine.curPos - 1;
+    }
     for (int i = prefixEnd; i >= 0; --i) {
         if (iswspace(cmdLine.line.at(i))) {
             prefixStart = i + 1;
@@ -202,14 +212,46 @@ static wstring GetUserPrefix(CmdLine cmdLine) {
     return cmdLine.line.substr(prefixStart, prefixEnd - prefixStart + 1);
 }
 
-static void InsertInCurPos(CmdLine &cmdLine, string str) {
-    cmdLine.line.insert((size_t)cmdLine.curPos, mbstringtowcstring(str));
+static void InsertInCurPos(CmdLine &cmdLine, wstring str) {
+    cmdLine.line.insert((size_t)cmdLine.curPos, str);
     cmdLine.curPos += (int)str.length();
 }
 
-static void InsertAndSelectNextSuggestion(CmdLine &cmdLine, vector<string> &suitableRefs) {
-    wstring currentSuggestion = cmdLine.line.substr(cmdLine.selectionStart, cmdLine.selectionEnd - cmdLine.selectionStart);
+static wstring GetSuggestedSuffix(CmdLine cmdLine) {
+    if (cmdLine.selectionStart >= 0) {
+        return cmdLine.line.substr(cmdLine.selectionStart, cmdLine.selectionEnd - cmdLine.selectionStart);
+    } else {
+        return wstring(L"");
+    }
+}
 
+static string GetNextSuggestedSuffix(string userPrefix, string currentSuffix, vector<string> &suitableRefs) {
+    vector<string>::iterator it;
+    if (currentSuffix.empty()) {
+        it = suitableRefs.begin();
+    } else {
+        it = find(suitableRefs.begin(), suitableRefs.end(), userPrefix + currentSuffix);
+        if (it == suitableRefs.end()) {
+            it = suitableRefs.begin();
+        } else {
+            it++;
+            if (it == suitableRefs.end()) {
+                it = suitableRefs.begin();
+            }
+        }
+    }
+    return (*it).substr(userPrefix.length());
+}
+
+static void ReplaceSelection(CmdLine &cmdLine, wstring str) {
+    if (cmdLine.selectionStart >= 0) {
+        cmdLine.line.replace(cmdLine.selectionStart, cmdLine.selectionEnd - cmdLine.selectionStart, str);
+        cmdLine.curPos = cmdLine.selectionEnd;
+    } else {
+        cmdLine.selectionStart = cmdLine.curPos;
+        InsertInCurPos(cmdLine, str);
+    }
+    cmdLine.selectionEnd = cmdLine.selectionStart + (int)str.length();
 }
 
 static void SetCmdLine(CmdLine cmdLine) {
@@ -279,12 +321,15 @@ HANDLE WINAPI OpenW(const struct OpenInfo *OInfo)
     string maxCommonPart = trie_get_common_prefix(trie);
     trie_free(trie);
 
-    if (maxCommonPart.length() > 0) {
+    if (maxCommonPart.length() > userPrefix.length()) {
         assert(StartsWith(maxCommonPart.c_str(), userPrefix.c_str()));
         string suffix = maxCommonPart.substr(userPrefix.length());
-        InsertInCurPos(cmdLine, suffix);
+        InsertInCurPos(cmdLine, mbstringtowcstring(suffix));
     } else  {
-        //InsertAndSelectNextSuggestion(cmdLine, suitableRefs);
+        string currentSuffix = wcstringtombstring(GetSuggestedSuffix(cmdLine));
+        logFile << "currentSuffix = \"" << currentSuffix.c_str() << "\"" << endl;
+        string nextSuffix = GetNextSuggestedSuffix(userPrefix, currentSuffix, suitableRefs);
+        ReplaceSelection(cmdLine, mbstringtowcstring(nextSuffix));
     }
     SetCmdLine(cmdLine);
 
