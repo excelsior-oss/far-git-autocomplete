@@ -3,6 +3,7 @@
 #include <cassert>
 #include <limits>
 #include <cstring>
+#include <cstdlib>
 
 typedef struct tNode {
     struct tNode *children[UCHAR_MAX + 1];
@@ -30,6 +31,21 @@ Trie* trie_create() {
     return trie;
 }
 
+static void node_free(Node *node) {
+    for (int i = 0; i <= UCHAR_MAX; i++) {
+        Node *child = node->children[i];
+        if (child != nullptr) {
+            node_free(child);
+        }
+    }
+    free(node);
+}
+
+void trie_free(Trie *trie) {
+    node_free(trie->root);
+    free(trie);
+}
+
 static void trie_add(Node *node, const char *str) {
     unsigned char ch = (unsigned char)str[0];
     if (ch == '\0') {
@@ -51,14 +67,14 @@ void trie_add(Trie* trie, std::string str) {
 
 void build_common_prefix(Node *node, std::string &prefix) {
     if (!node->leaf && node->children_count == 1) {
-        unsigned char single_child = 0;
-        for (unsigned char i = 0; i <= UCHAR_MAX; i++) {
+        int single_child = -1;
+        for (int i = 0; i <= UCHAR_MAX; i++) {
             if (node->children[i] != nullptr) {
                 single_child = i;
                 break;
             }
         }
-
+        assert(single_child != -1);
         prefix.push_back((char)single_child);
         build_common_prefix(node->children[single_child], prefix);
     }
