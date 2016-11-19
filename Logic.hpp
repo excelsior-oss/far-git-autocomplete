@@ -8,3 +8,7 @@
 git_repository* OpenGitRepo(std::wstring dir);
 
 void TransformCmdLine(CmdLine &cmdLine, git_repository *repo);
+
+#ifdef DEBUG
+void LogicTest();
+#endif

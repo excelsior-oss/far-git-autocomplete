@@ -12,6 +12,7 @@
 #include "guid.hpp"
 #include "CmdLine.hpp"
 #include "Logic.hpp"
+#include "Trie.hpp"
 
 using namespace std;
 
@@ -20,12 +21,6 @@ wofstream logFile;
 static struct PluginStartupInfo Info;
 
 void WINAPI GetGlobalInfoW(struct GlobalInfo *GInfo) {
-    logFile.open("plugin_log.txt");
-    logFile << "I am started" << endl;
-    // TODO: add time
-
-    git_libgit2_init();
-
 	GInfo->StructSize=sizeof(struct GlobalInfo);
 	GInfo->MinFarVersion=FARMANAGERVERSION;
 	GInfo->Version=PLUGIN_VERSION;
@@ -33,6 +28,19 @@ void WINAPI GetGlobalInfoW(struct GlobalInfo *GInfo) {
 	GInfo->Title=PLUGIN_NAME;
 	GInfo->Description=PLUGIN_DESC;
 	GInfo->Author=PLUGIN_AUTHOR;
+
+    logFile.open("plugin_log.txt");
+    logFile << "I am started" << endl;
+    // TODO: add time
+
+    git_libgit2_init();
+
+#ifdef DEBUG
+    trie_test();
+    CmdLineTest();
+    LogicTest();
+#endif
+
 }
 
 void WINAPI ExitFARW(const struct ExitInfo *EInfo) {
@@ -75,12 +83,7 @@ static CmdLine GetCmdLine() {
     selection.StructSize = sizeof(selection);
     Info.PanelControl(PANEL_ACTIVE, FCTL_GETCMDLINESELECTION, 0, &selection);
 
-    CmdLine result = {line, curPos, (int)selection.SelStart, (int)selection.SelEnd};
-    if (result.selectionStart == -1) {
-        assert(result.selectionEnd == 0);
-        result.selectionEnd = -1;
-    }
-    return result;
+    return CmdLineCreate(line, curPos, (int)selection.SelStart, (int)selection.SelEnd);
 }
 
 static void SetCmdLine(const CmdLine &cmdLine) {

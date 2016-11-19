@@ -162,3 +162,33 @@ void TransformCmdLine(CmdLine &cmdLine, git_repository *repo) {
         ReplaceSuggestedSuffix(cmdLine, mb2w(newSuffix));
     }
 }
+
+#ifdef DEBUG
+void LogicTest() {
+    assert(RefMayBeEncodedByPartialPrefix("svn/trunk", "s/t"));
+    assert(RefMayBeEncodedByPartialPrefix("foo/bar/qux", "f/b"));
+    assert(RefMayBeEncodedByPartialPrefix("foo/bar/qux", "f/b/q"));
+    assert(RefMayBeEncodedByPartialPrefix("foo/bar/qux", "f/ba/q"));
+    assert(RefMayBeEncodedByPartialPrefix("foo/bar/qux", "f/bar/q"));
+    assert(RefMayBeEncodedByPartialPrefix("foo/bar/qux", "foo/bar/qux"));
+
+    assert(!RefMayBeEncodedByPartialPrefix("foo/bar/qux", "f/q"));
+    assert(!RefMayBeEncodedByPartialPrefix("foo/bar/qux", "fo/baz/q"));
+    assert(!RefMayBeEncodedByPartialPrefix("foo", "f/b"));
+    assert(!RefMayBeEncodedByPartialPrefix("foo/", "f/b"));
+    assert(!RefMayBeEncodedByPartialPrefix("foo/b", "f/bar"));
+
+    {
+        vector<string> suitableRefs = { string("abcfoo"), string("abcxyz"), string("abcbar") };
+        assert(string("bar") == ObtainNextSuggestedSuffix(string("abc"), string("xyz"), suitableRefs));
+        assert(string("foo") == ObtainNextSuggestedSuffix(string("abc"), string("bar"), suitableRefs));
+        assert(string("foo") == ObtainNextSuggestedSuffix(string("abc"), string(""), suitableRefs));
+    }
+    {
+        vector<string> suitableRefs = { string("abc"), string("abcxyz"), string("abcbar") };
+        assert(string("bar") == ObtainNextSuggestedSuffix(string("abc"), string("xyz"), suitableRefs));
+        assert(string("") == ObtainNextSuggestedSuffix(string("abc"), string("bar"), suitableRefs));
+        assert(string("xyz") == ObtainNextSuggestedSuffix(string("abc"), string(""), suitableRefs));
+    }
+}
+#endif

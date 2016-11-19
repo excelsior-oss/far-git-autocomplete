@@ -5,6 +5,8 @@
 #include <cstring>
 #include <cstdlib>
 
+using namespace std;
+
 typedef struct tNode {
     struct tNode *children[UCHAR_MAX + 1];
     size_t children_count;
@@ -61,11 +63,11 @@ static void trie_add(Node *node, const char *str) {
     trie_add(*child, str + 1);
 }
 
-void trie_add(Trie* trie, std::string str) {
+void trie_add(Trie* trie, string str) {
     trie_add(trie->root, str.c_str());
 }
 
-void build_common_prefix(Node *node, std::string &prefix) {
+void build_common_prefix(Node *node, string &prefix) {
     if (!node->leaf && node->children_count == 1) {
         int single_child = -1;
         for (int i = 0; i <= UCHAR_MAX; i++) {
@@ -80,8 +82,27 @@ void build_common_prefix(Node *node, std::string &prefix) {
     }
 }
 
-std::string trie_get_common_prefix(Trie* trie) {
-    std::string prefix("");
+string trie_get_common_prefix(Trie* trie) {
+    string prefix("");
     build_common_prefix(trie->root, prefix);
     return prefix;
 }
+
+#ifdef DEBUG
+void trie_test() {
+    Trie *trie = trie_create();
+    assert(string("") == trie_get_common_prefix(trie));
+
+    trie_add(trie, string("abcdef"));
+    trie_add(trie, string("abcdef"));
+    assert(string("abcdef") == trie_get_common_prefix(trie));
+
+    trie_add(trie, string("abcxyz"));
+    assert(string("abc") == trie_get_common_prefix(trie));
+
+    trie_add(trie, string("ab"));
+    assert(string("ab") == trie_get_common_prefix(trie));
+
+    trie_free(trie);
+}
+#endif
