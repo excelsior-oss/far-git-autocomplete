@@ -47,28 +47,16 @@ void WINAPI ExitFARW(const struct ExitInfo *EInfo)
     logFile.close();
 }
 
-/*
- Функция GetMsg возвращает строку сообщения из языкового файла.
- А это надстройка над Info.GetMsg для сокращения кода :-)
-*/
 const wchar_t *GetMsg(int MsgId)
 {
 	return Info.GetMsg(&MainGuid,MsgId);
 }
 
-/*
-Функция SetStartupInfoW вызывается один раз, перед всеми
-другими функциями. Она передается плагину информацию,
-необходимую для дальнейшей работы.
-*/
 void WINAPI SetStartupInfoW(const struct PluginStartupInfo *psi)
 {
 	Info=*psi;
 }
 
-/*
-Функция GetPluginInfoW вызывается для получения информации о плагине
-*/
 void WINAPI GetPluginInfoW(struct PluginInfo *PInfo)
 {
 	PInfo->StructSize=sizeof(*PInfo);
@@ -262,9 +250,6 @@ static void ReplaceSelection(CmdLine &cmdLine, wstring str) {
     }
 }
 
-/*
-  Функция OpenPluginW вызывается при создании новой копии плагина.
-*/
 HANDLE WINAPI OpenW(const struct OpenInfo *OInfo)
 {
     logFile << endl << "I AM OPENED" << endl;
