@@ -13,6 +13,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <functional>
 
 using namespace std;
 
@@ -140,46 +141,75 @@ static git_repository* OpenGitRepo(wstring dir) {
     return repo;
 }
 
-static void FilterReference(const char *ref, const char *currentPrefix, vector<string> &suitableRefs) {
-    if (StartsWith(ref, currentPrefix)) {
-        suitableRefs.push_back(string(ref));
-    }
-}
-
-static void FilterReferences(const char *ref, const char *currentPrefix, vector<string> &suitableRefs) {
+static void FilterReferences(const char *ref, function<void (const char *)> filterOneRef) {
     const char *prefixes[] = { "refs/heads/", "refs/tags/", "refs/stash" };
     const char *remotePrefix = "refs/remotes/";
     for (int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]); ++i) {
         if (StartsWith(ref, prefixes[i])) {
-            FilterReference(ref + strlen(prefixes[i]), currentPrefix, suitableRefs);
+            filterOneRef(ref + strlen(prefixes[i]));
             return;
         }
     }
     if (StartsWith(ref, remotePrefix)) {
         const char *remoteRef = ref + strlen(remotePrefix);
-        FilterReference(remoteRef, currentPrefix, suitableRefs);
+        filterOneRef(remoteRef);
 
         const char *slashPtr = strchr(remoteRef, '/');
         assert(slashPtr != nullptr);
-        FilterReference(slashPtr + 1, currentPrefix, suitableRefs);
+        filterOneRef(slashPtr + 1);
         return;
     }
     logFile << "DropRefPrefix: unexpected ref = " << ref << endl;
 }
 
-static void ObtainSuitableRefsByPrefix(git_repository *repo, string currentPrefix, vector<string> &suitableRefs) {
+static void ObtainSuitableRefsBy(git_repository *repo, vector<string> &suitableRefs, function<bool (const char *)> isSuitableRef) {
     git_reference_iterator *iter = NULL;
     int error = git_reference_iterator_new(&iter, repo);
 
     git_reference *ref;
     while (!(error = git_reference_next(&ref, iter))) {
-        FilterReferences(git_reference_name(ref), currentPrefix.c_str(), suitableRefs);
+        FilterReferences(git_reference_name(ref), [&suitableRefs, isSuitableRef](const char *refName) {
+            if (isSuitableRef(refName)) {
+                suitableRefs.push_back(string(refName));
+            }
+        });
     }
     assert(error == GIT_ITEROVER);
+}
 
-    // TODO: sort by date if settings
-    sort(suitableRefs.begin(), suitableRefs.end());
-    suitableRefs.erase(unique(suitableRefs.begin(), suitableRefs.end()), suitableRefs.end());
+static void ObtainSuitableRefsByStrictPrefix(git_repository *repo, string currentPrefix, vector<string> &suitableRefs) {
+    ObtainSuitableRefsBy(repo, suitableRefs, [&currentPrefix](const char *refName) -> bool {
+        return StartsWith(refName, currentPrefix.c_str());
+    });
+}
+
+/** Returns true for pairs like "cypok/arm/master" with prefix "cy/a/m". */
+static bool RefMayBeEncodedByPartialPrefix(const char *ref, const char *prefix) {
+    const char *p = prefix;
+    const char *r = ref;
+    for (;;) {
+        if (*p == '\0') {
+            return true;
+
+        } else if (*p == '/') {
+            r = strchr(r, '/');
+            if (r == nullptr) {
+                return false;
+            }
+
+        } else if (*r != *p) {
+            return false;
+        }
+
+        p++;
+        r++;
+    }
+}
+
+static void ObtainSuitableRefsByPartialPrefixes(git_repository *repo, string currentPrefix, vector<string> &suitableRefs) {
+    ObtainSuitableRefsBy(repo, suitableRefs, [&currentPrefix](const char *refName) -> bool {
+        return RefMayBeEncodedByPartialPrefix(refName, currentPrefix.c_str());
+    });
 }
 
 static string FindCommonPrefix(vector<string> &suitableRefs) {
@@ -210,13 +240,20 @@ static void TransformCmdLine(CmdLine &cmdLine, git_repository *repo) {
     logFile << "User prefix = \"" << currentPrefix.c_str() << "\"" << endl;
 
     vector<string> suitableRefs;
-    ObtainSuitableRefsByPrefix(repo, currentPrefix, suitableRefs);
+    ObtainSuitableRefsByStrictPrefix(repo, currentPrefix, suitableRefs);
 
     if (suitableRefs.empty()) {
-        // TODO: support another completion options, e.g. "s/t" -> "svn/trunk"
+        ObtainSuitableRefsByPartialPrefixes(repo, currentPrefix, suitableRefs);
+    }
+
+    if (suitableRefs.empty()) {
         logFile << "No suitable refs" << endl;
         return;
     }
+
+    // TODO: sort by date if settings
+    sort(suitableRefs.begin(), suitableRefs.end());
+    suitableRefs.erase(unique(suitableRefs.begin(), suitableRefs.end()), suitableRefs.end());
 
     for_each(suitableRefs.begin(), suitableRefs.end(), [](string s) {
         logFile << "Suitable ref: " << s.c_str() << endl;
