@@ -29,7 +29,9 @@ void WINAPI GetGlobalInfoW(struct GlobalInfo *GInfo) {
 	GInfo->Description=PLUGIN_DESC;
 	GInfo->Author=PLUGIN_AUTHOR;
 
+#ifdef DEBUG
     logFile.open("plugin_log.txt");
+#endif
     logFile << "I am started" << endl;
     // TODO: add time
 
@@ -47,7 +49,9 @@ void WINAPI ExitFARW(const struct ExitInfo *EInfo) {
     git_libgit2_shutdown();
 
     logFile << L"I am closed" << endl;
+#ifdef DEBUG
     logFile.close();
+#endif
 }
 
 const wchar_t *GetMsg(int MsgId) {
