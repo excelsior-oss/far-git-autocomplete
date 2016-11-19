@@ -193,19 +193,13 @@ static string FindCommonPrefix(vector<string> &suitableRefs) {
 }
 
 static string ObtainNextSuggestedSuffix(string currentPrefix, string currentSuffix, vector<string> &suitableRefs) {
-    vector<string>::iterator it;
-    if (currentSuffix.empty()) {
+    auto it = find(suitableRefs.begin(), suitableRefs.end(), currentPrefix + currentSuffix);
+    if (it == suitableRefs.end()) {
         it = suitableRefs.begin();
-    }
-    else {
-        it = find(suitableRefs.begin(), suitableRefs.end(), currentPrefix + currentSuffix);
+    } else {
+        it++;
         if (it == suitableRefs.end()) {
             it = suitableRefs.begin();
-        } else {
-            it++;
-            if (it == suitableRefs.end()) {
-                it = suitableRefs.begin();
-            }
         }
     }
     return DropPrefix(*it, currentPrefix);
