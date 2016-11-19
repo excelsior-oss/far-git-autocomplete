@@ -13,6 +13,7 @@
 #include "CmdLine.hpp"
 #include "Logic.hpp"
 #include "Trie.hpp"
+#include "Utils.hpp"
 
 using namespace std;
 
@@ -38,6 +39,7 @@ void WINAPI GetGlobalInfoW(struct GlobalInfo *GInfo) {
     git_libgit2_init();
 
 #ifdef DEBUG
+    UtilsTest();
     trie_test();
     CmdLineTest();
     LogicTest();

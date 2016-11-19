@@ -11,3 +11,7 @@ bool StartsWith(const char *str, const char *prefix);
 bool StartsWith(const std::string &str, const std::string &prefix);
 
 std::string DropPrefix(const std::string &str, const std::string &prefix);
+
+#ifdef DEBUG
+void UtilsTest();
+#endif

@@ -24,7 +24,12 @@ wstring mb2w(string str) {
 }
 
 bool StartsWith(const char *str, const char *prefix) {
-    return strstr(str, prefix) == str;
+    while (*prefix != '\0') {
+        if (*(str++) != *(prefix++)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool StartsWith(const string &str, const string &prefix) {
@@ -35,3 +40,18 @@ string DropPrefix(const string &str, const string &prefix) {
     assert(StartsWith(str, prefix));
     return str.substr(prefix.length());
 }
+
+#ifdef DEBUG
+void UtilsTest() {
+    assert(StartsWith("abcdef", "abc"));
+    assert(StartsWith("abc", "abc"));
+    assert(StartsWith("abc", ""));
+
+    assert(!StartsWith("abc", "abcdef"));
+    assert(!StartsWith("", "abc"));
+    assert(!StartsWith("xabc", "abc"));
+
+    assert(string("def") == DropPrefix(string("abcdef"), string("abc")));
+    assert(string("") == DropPrefix(string("abc"), string("abc")));
+}
+#endif
