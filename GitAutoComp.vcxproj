@@ -46,7 +46,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\build\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\build\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>git2.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -63,7 +63,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\build\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\build\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>git2.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -80,7 +80,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\build\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\build\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>git2.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -97,7 +97,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\build\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\libgit2-0.24.3\build\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>git2.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
