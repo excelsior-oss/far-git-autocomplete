@@ -81,8 +81,8 @@ static bool RefMayBeEncodedByPartialPrefix(const char *ref, const char *prefix) 
         if (*p == '\0') {
             return true;
 
-        } else if (*p == '/') {
-            r = strchr(r, '/');
+        } else if (ispunct(*p) || isupper(*p)) {
+            r = strchr(r, *p);
             if (r == nullptr) {
                 return false;
             }
@@ -173,12 +173,15 @@ void LogicTest() {
     assert(RefMayBeEncodedByPartialPrefix("foo/bar/qux", "f/ba/q"));
     assert(RefMayBeEncodedByPartialPrefix("foo/bar/qux", "f/bar/q"));
     assert(RefMayBeEncodedByPartialPrefix("foo/bar/qux", "foo/bar/qux"));
+    assert(RefMayBeEncodedByPartialPrefix("foo/bar-qux", "f/b-q"));
+    assert(RefMayBeEncodedByPartialPrefix("foo/barQux", "f/bQ"));
 
     assert(!RefMayBeEncodedByPartialPrefix("foo/bar/qux", "f/q"));
     assert(!RefMayBeEncodedByPartialPrefix("foo/bar/qux", "fo/baz/q"));
     assert(!RefMayBeEncodedByPartialPrefix("foo", "f/b"));
     assert(!RefMayBeEncodedByPartialPrefix("foo/", "f/b"));
     assert(!RefMayBeEncodedByPartialPrefix("foo/b", "f/bar"));
+    assert(!RefMayBeEncodedByPartialPrefix("foo/bar-qux", "f/brq"));
 
     {
         vector<string> suitableRefs = { string("abcfoo"), string("abcxyz"), string("abcbar") };
