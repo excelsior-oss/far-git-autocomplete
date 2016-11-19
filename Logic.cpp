@@ -30,24 +30,26 @@ git_repository* OpenGitRepo(wstring dir) {
 }
 
 static void FilterReferences(const char *ref, function<void (const char *)> filterOneRef) {
-    const char *prefixes[] = { "refs/heads/", "refs/tags/", "refs/stash" };
-    const char *remotePrefix = "refs/remotes/";
+    const char *prefixes[] = { "refs/heads/", "refs/tags/" };
     for (int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]); ++i) {
         if (StartsWith(ref, prefixes[i])) {
             filterOneRef(ref + strlen(prefixes[i]));
             return;
         }
     }
+    const char *remotePrefix = "refs/remotes/";
     if (StartsWith(ref, remotePrefix)) {
         const char *remoteRef = ref + strlen(remotePrefix);
         filterOneRef(remoteRef);
 
+        // TODO: add option for this
         const char *slashPtr = strchr(remoteRef, '/');
         assert(slashPtr != nullptr);
         filterOneRef(slashPtr + 1);
         return;
     }
-    logFile << "DropRefPrefix: unexpected ref = " << ref << endl;
+    // there are also "refs/stash", "refs/notes"
+    logFile << "Ignored ref = " << ref << endl;
 }
 
 static void ObtainSuitableRefsBy(git_repository *repo, vector<string> &suitableRefs, function<bool (const char *)> isSuitableRef) {
@@ -139,9 +141,9 @@ void TransformCmdLine(CmdLine &cmdLine, git_repository *repo) {
         return;
     }
 
-    // TODO: sort by date if settings
     sort(suitableRefs.begin(), suitableRefs.end());
     suitableRefs.erase(unique(suitableRefs.begin(), suitableRefs.end()), suitableRefs.end());
+    // TODO: sort by date if settings
 
     for_each(suitableRefs.begin(), suitableRefs.end(), [](string s) {
         logFile << "Suitable ref: " << s.c_str() << endl;
