@@ -146,6 +146,7 @@ static void ParseOption(Options &options, const wstring &str) {
 }
 
 static void ParseOptionsFromMacro(Options &options, OpenMacroInfo *MInfo) {
+    SetDefaultOptions(options);
     for (size_t i = 0; i < MInfo->Count; i++) {
         FarMacroValue value = MInfo->Values[i];
         if (value.Type != FMVT_STRING) {
