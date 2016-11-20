@@ -23,7 +23,7 @@ struct PluginStartupInfo Info;
 
 void WINAPI GetGlobalInfoW(struct GlobalInfo *GInfo) {
 	GInfo->StructSize=sizeof(struct GlobalInfo);
-	GInfo->MinFarVersion=FARMANAGERVERSION;
+	GInfo->MinFarVersion=PLUGIN_MIN_FAR_VERSION;
 	GInfo->Version=PLUGIN_VERSION;
 	GInfo->Guid=MainGuid;
 	GInfo->Title=PLUGIN_NAME;
