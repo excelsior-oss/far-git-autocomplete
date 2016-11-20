@@ -8,6 +8,7 @@
 #include "GitAutoComp.hpp"
 #include "Utils.hpp"
 #include "Trie.hpp"
+#include "RefsDialog.h"
 
 using namespace std;
 
@@ -81,9 +82,13 @@ static bool RefMayBeEncodedByPartialPrefix(const char *ref, const char *prefix) 
     for (;;) {
         if (*p == '\0') {
             return true;
-        } else {
+        } else if (ispunct(*p) || isupper(*p)) {
             r = strchr(r, *p);
             if (r == nullptr) {
+                return false;
+            }
+        } else {
+            if (*p != *r) {
                 return false;
             }
         }
@@ -148,10 +153,6 @@ void TransformCmdLine(const Options &options, CmdLine &cmdLine, git_repository *
         *logFile << "Suitable ref: " << s.c_str() << endl;
     });
 
-    if (options.showDialog) {
-        *logFile << "FIXME: showing dialog is not implemented yet" << endl;
-    }
-
     string newPrefix = FindCommonPrefix(suitableRefs);
     *logFile << "Common prefix: " << newPrefix.c_str() << endl;
 
@@ -159,12 +160,23 @@ void TransformCmdLine(const Options &options, CmdLine &cmdLine, git_repository *
         ReplaceUserPrefix(cmdLine, mb2w(newPrefix));
 
     } else {
-        string currentSuffix = w2mb(GetSuggestedSuffix(cmdLine));
-        *logFile << "currentSuffix = \"" << currentSuffix.c_str() << "\"" << endl;
+        if (options.showDialog) {
+            // Yes, we show dialog even if there is only one suitable ref.
+            *logFile << "Showing dialog..." << endl;
+            string selectedRef = ShowRefsDialog(suitableRefs);
+            *logFile << "Dialog closed, selectedRef = \"" << selectedRef.c_str() << "\"" << endl;
+            if (!selectedRef.empty()) {
+                ReplaceUserPrefix(cmdLine, mb2w(selectedRef));
+            }
 
-        string newSuffix = ObtainNextSuggestedSuffix(currentPrefix, currentSuffix, suitableRefs);
-        *logFile << "nextSuffx = \"" << newSuffix.c_str() << "\"" << endl;
-        ReplaceSuggestedSuffix(cmdLine, mb2w(newSuffix));
+        } else {
+            string currentSuffix = w2mb(GetSuggestedSuffix(cmdLine));
+            *logFile << "currentSuffix = \"" << currentSuffix.c_str() << "\"" << endl;
+
+            string newSuffix = ObtainNextSuggestedSuffix(currentPrefix, currentSuffix, suitableRefs);
+            *logFile << "nextSuffx = \"" << newSuffix.c_str() << "\"" << endl;
+            ReplaceSuggestedSuffix(cmdLine, mb2w(newSuffix));
+        }
     }
 }
 
@@ -178,13 +190,13 @@ void LogicTest() {
     assert(RefMayBeEncodedByPartialPrefix("foo/bar/qux", "foo/bar/qux"));
     assert(RefMayBeEncodedByPartialPrefix("foo/bar-qux", "f/b-q"));
     assert(RefMayBeEncodedByPartialPrefix("foo/barQux", "f/bQ"));
-    assert(RefMayBeEncodedByPartialPrefix("foo/bar/qux", "f/q"));
-    assert(RefMayBeEncodedByPartialPrefix("foo/bar-qux", "f/brq"));
 
     assert(!RefMayBeEncodedByPartialPrefix("foo/bar/qux", "fo/baz/q"));
     assert(!RefMayBeEncodedByPartialPrefix("foo", "f/b"));
     assert(!RefMayBeEncodedByPartialPrefix("foo/", "f/b"));
     assert(!RefMayBeEncodedByPartialPrefix("foo/b", "f/bar"));
+    assert(!RefMayBeEncodedByPartialPrefix("foo/bar/qux", "f/q"));
+    assert(!RefMayBeEncodedByPartialPrefix("foo/bar-qux", "f/brq"));
 
     {
         vector<string> suitableRefs = { string("abcfoo"), string("abcxyz"), string("abcbar") };

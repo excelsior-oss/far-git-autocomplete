@@ -19,7 +19,7 @@ using namespace std;
 
 wostream *logFile;
 
-static struct PluginStartupInfo Info;
+struct PluginStartupInfo Info;
 
 void WINAPI GetGlobalInfoW(struct GlobalInfo *GInfo) {
 	GInfo->StructSize=sizeof(struct GlobalInfo);

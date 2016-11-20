@@ -10,6 +10,8 @@ using namespace std;
 
 wostream *logFile;
 
+struct PluginStartupInfo Info;
+
 int main() {
 #ifdef DEBUG
     logFile = &wcout;
