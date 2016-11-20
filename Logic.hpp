@@ -5,9 +5,15 @@
 
 #include "CmdLine.hpp"
 
+typedef struct tOptions {
+    bool showDialog;
+    bool sortByName;
+    bool stripRemoteName;
+} Options;
+
 git_repository* OpenGitRepo(std::wstring dir);
 
-void TransformCmdLine(CmdLine &cmdLine, git_repository *repo);
+void TransformCmdLine(const Options &options, CmdLine &cmdLine, git_repository *repo);
 
 #ifdef DEBUG
 void LogicTest();

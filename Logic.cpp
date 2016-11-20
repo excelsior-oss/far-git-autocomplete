@@ -29,7 +29,7 @@ git_repository* OpenGitRepo(wstring dir) {
     return repo;
 }
 
-static void FilterReferences(const char *ref, function<void (const char *)> filterOneRef) {
+static void FilterReferences(const Options &options, const char *ref, function<void (const char *)> filterOneRef) {
     const char *prefixes[] = { "refs/heads/", "refs/tags/" };
     for (int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]); ++i) {
         if (StartsWith(ref, prefixes[i])) {
@@ -42,23 +42,24 @@ static void FilterReferences(const char *ref, function<void (const char *)> filt
         const char *remoteRef = ref + strlen(remotePrefix);
         filterOneRef(remoteRef);
 
-        // TODO: add option for this
-        const char *slashPtr = strchr(remoteRef, '/');
-        assert(slashPtr != nullptr);
-        filterOneRef(slashPtr + 1);
+        if (options.stripRemoteName) {
+            const char *slashPtr = strchr(remoteRef, '/');
+            assert(slashPtr != nullptr);
+            filterOneRef(slashPtr + 1);
+        }
         return;
     }
     // there are also "refs/stash", "refs/notes"
     *logFile << "Ignored ref = " << ref << endl;
 }
 
-static void ObtainSuitableRefsBy(git_repository *repo, vector<string> &suitableRefs, function<bool (const char *)> isSuitableRef) {
+static void ObtainSuitableRefsBy(const Options &options, git_repository *repo, vector<string> &suitableRefs, function<bool (const char *)> isSuitableRef) {
     git_reference_iterator *iter = NULL;
     int error = git_reference_iterator_new(&iter, repo);
 
     git_reference *ref;
     while (!(error = git_reference_next(&ref, iter))) {
-        FilterReferences(git_reference_name(ref), [&suitableRefs, isSuitableRef](const char *refName) {
+        FilterReferences(options, git_reference_name(ref), [&suitableRefs, isSuitableRef](const char *refName) {
             if (isSuitableRef(refName)) {
                 suitableRefs.push_back(string(refName));
             }
@@ -67,8 +68,8 @@ static void ObtainSuitableRefsBy(git_repository *repo, vector<string> &suitableR
     assert(error == GIT_ITEROVER);
 }
 
-static void ObtainSuitableRefsByStrictPrefix(git_repository *repo, string currentPrefix, vector<string> &suitableRefs) {
-    ObtainSuitableRefsBy(repo, suitableRefs, [&currentPrefix](const char *refName) -> bool {
+static void ObtainSuitableRefsByStrictPrefix(const Options &options, git_repository *repo, string currentPrefix, vector<string> &suitableRefs) {
+    ObtainSuitableRefsBy(options, repo, suitableRefs, [&currentPrefix](const char *refName) -> bool {
         return StartsWith(refName, currentPrefix.c_str());
     });
 }
@@ -92,8 +93,8 @@ static bool RefMayBeEncodedByPartialPrefix(const char *ref, const char *prefix) 
     }
 }
 
-static void ObtainSuitableRefsByPartialPrefixes(git_repository *repo, string currentPrefix, vector<string> &suitableRefs) {
-    ObtainSuitableRefsBy(repo, suitableRefs, [&currentPrefix](const char *refName) -> bool {
+static void ObtainSuitableRefsByPartialPrefixes(const Options &options, git_repository *repo, string currentPrefix, vector<string> &suitableRefs) {
+    ObtainSuitableRefsBy(options, repo, suitableRefs, [&currentPrefix](const char *refName) -> bool {
         return RefMayBeEncodedByPartialPrefix(refName, currentPrefix.c_str());
     });
 }
@@ -121,15 +122,15 @@ static string ObtainNextSuggestedSuffix(string currentPrefix, string currentSuff
     return DropPrefix(*it, currentPrefix);
 }
 
-void TransformCmdLine(CmdLine &cmdLine, git_repository *repo) {
+void TransformCmdLine(const Options &options, CmdLine &cmdLine, git_repository *repo) {
     string currentPrefix = w2mb(GetUserPrefix(cmdLine));
     *logFile << "User prefix = \"" << currentPrefix.c_str() << "\"" << endl;
 
     vector<string> suitableRefs;
-    ObtainSuitableRefsByStrictPrefix(repo, currentPrefix, suitableRefs);
+    ObtainSuitableRefsByStrictPrefix(options, repo, currentPrefix, suitableRefs);
 
     if (suitableRefs.empty()) {
-        ObtainSuitableRefsByPartialPrefixes(repo, currentPrefix, suitableRefs);
+        ObtainSuitableRefsByPartialPrefixes(options, repo, currentPrefix, suitableRefs);
     }
 
     if (suitableRefs.empty()) {
@@ -139,11 +140,17 @@ void TransformCmdLine(CmdLine &cmdLine, git_repository *repo) {
 
     sort(suitableRefs.begin(), suitableRefs.end());
     suitableRefs.erase(unique(suitableRefs.begin(), suitableRefs.end()), suitableRefs.end());
-    // TODO: sort by date if settings
+    if (!options.sortByName) {
+        *logFile << "FIXME: sorting by time is not implemented yet" << endl;
+    }
 
     for_each(suitableRefs.begin(), suitableRefs.end(), [](string s) {
         *logFile << "Suitable ref: " << s.c_str() << endl;
     });
+
+    if (options.showDialog) {
+        *logFile << "FIXME: showing dialog is not implemented yet" << endl;
+    }
 
     string newPrefix = FindCommonPrefix(suitableRefs);
     *logFile << "Common prefix: " << newPrefix.c_str() << endl;

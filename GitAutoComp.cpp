@@ -121,12 +121,68 @@ static wstring GetActivePanelDir() {
     return result;
 }
 
-HANDLE WINAPI OpenW(const struct OpenInfo *OInfo) {
-    *logFile << endl << "I AM OPENED" << endl;
-    if (OInfo->OpenFrom != OPEN_PLUGINSMENU) {
-        *logFile << "OpenW, bad OpenFrom" << endl;
-        return INVALID_HANDLE_VALUE;
+static void SetDefaultOptions(Options &options) {
+    options.showDialog = true;
+    options.sortByName = true;
+    options.stripRemoteName = true;
+}
+
+static void ParseOption(Options &options, const wstring &str) {
+    if (wstring(L"ShowDialog") == str) {
+        options.showDialog = true;
+    } else if (wstring(L"NoDialog") == str) {
+        options.showDialog = false;
+    } else if (wstring(L"SortByName") == str) {
+        options.sortByName = true;
+    } else if (wstring(L"SortByTime") == str) {
+        options.sortByName = false;
+    } else if (wstring(L"StripRemoteName") == str) {
+        options.stripRemoteName = true;
+    } else if (wstring(L"ShowRemoteName") == str) {
+        options.stripRemoteName = false;
+    } else {
+        *logFile << "Unknown option \"" << str << "\"" << endl;
     }
+}
+
+static void ParseOptionsFromMacro(Options &options, OpenMacroInfo *MInfo) {
+    for (size_t i = 0; i < MInfo->Count; i++) {
+        FarMacroValue value = MInfo->Values[i];
+        if (value.Type != FMVT_STRING) {
+            *logFile << "Unexpected macro argument of type " << value.Type << endl;
+            continue;
+        }
+        ParseOption(options, wstring(value.String));
+    }
+}
+
+HANDLE WINAPI OpenW(const struct OpenInfo *OInfo) {
+    *logFile << "=====================================================" << endl;
+
+    Options options;
+    switch (OInfo->OpenFrom) {
+        case OPEN_PLUGINSMENU:
+            *logFile << "I am opened from plugins menu" << endl;
+            SetDefaultOptions(options);
+            break;
+
+        case OPEN_FROMMACRO: {
+            // To record such macro: Ctrl + .; a; Ctrl + Shift + .; <hotkey>; enter one of following:
+            // Plugin.Call("89DF1D5B-F5BB-415B-993D-D34C5FFE049F", "ShowDialog", "SortByName", "StripRemoteName")
+            // Plugin.Call("89DF1D5B-F5BB-415B-993D-D34C5FFE049F", "NoDialog", "SortByTime", "ShowRemoteName")
+            *logFile << "I am opened from macro" << endl;
+            ParseOptionsFromMacro(options, (OpenMacroInfo*)OInfo->Data);
+            break;
+        }
+
+        default:
+            *logFile << "OpenW, bad OpenFrom" << endl;
+            return INVALID_HANDLE_VALUE;
+    }
+    *logFile << "options: "
+        << "showDialog = " << options.showDialog << " "
+        << "sortByName = " << options.sortByName << " "
+        << "stripRemoteName = " << options.stripRemoteName << endl;
 
     wstring curDir = GetActivePanelDir();
     if (curDir.empty()) {
@@ -149,7 +205,7 @@ HANDLE WINAPI OpenW(const struct OpenInfo *OInfo) {
     *logFile << "selection start = " << cmdLine.selectionStart << endl;
     *logFile << "selection end   = " << cmdLine.selectionEnd << endl;
 
-    TransformCmdLine(cmdLine, repo);
+    TransformCmdLine(options, cmdLine, repo);
     git_repository_free(repo);
 
     *logFile << "After transformation:" << endl;
