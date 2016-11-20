@@ -112,4 +112,10 @@
   <ImportGroup Label="PropertySheets">
     <Import Project="$(ProjectDir)..\..\_build\vc\config\common.props" />
   </ImportGroup>
+  <ItemDefinitionGroup>
+    <PostBuildEvent>
+      <Message>Copy libgit2</Message>
+      <Command>xcopy /y "$(ProjectDir)libgit2\lib\$(Platform)\git2.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
 </Project>
