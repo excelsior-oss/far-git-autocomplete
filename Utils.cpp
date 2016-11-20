@@ -11,7 +11,7 @@ string w2mb(wstring wstr) {
     char *mbstr = (char*)malloc(mbstrSize); // this is enough for all ;) FIXME
     bool convertedOk = (wcstombs(mbstr, wstr.c_str(), mbstrSize) != (size_t)-1);
     if (!convertedOk) {
-        logFile << "Cannot convert string \"" << wstr.c_str() << "\" to multi-byte string :(" << endl;
+        *logFile << "Cannot convert string \"" << wstr.c_str() << "\" to multi-byte string :(" << endl;
         return string("");
     }
     string result = string(mbstr);

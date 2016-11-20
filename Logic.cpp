@@ -14,7 +14,7 @@ using namespace std;
 git_repository* OpenGitRepo(wstring dir) {
     string dirForGit = w2mb(dir);
     if (dirForGit.length() == 0) {
-        logFile << "Bad dir for Git: " << dir.c_str() << endl;
+        *logFile << "Bad dir for Git: " << dir.c_str() << endl;
         return nullptr;
     }
 
@@ -22,7 +22,7 @@ git_repository* OpenGitRepo(wstring dir) {
     int error = git_repository_open_ext(&repo, dirForGit.c_str(), 0, nullptr);
     if (error < 0) {
         const git_error *e = giterr_last();
-        logFile << "libgit2 error " << error << "/" << e->klass << ": " << e->message << endl;
+        *logFile << "libgit2 error " << error << "/" << e->klass << ": " << e->message << endl;
         return nullptr;
     }
 
@@ -49,7 +49,7 @@ static void FilterReferences(const char *ref, function<void (const char *)> filt
         return;
     }
     // there are also "refs/stash", "refs/notes"
-    logFile << "Ignored ref = " << ref << endl;
+    *logFile << "Ignored ref = " << ref << endl;
 }
 
 static void ObtainSuitableRefsBy(git_repository *repo, vector<string> &suitableRefs, function<bool (const char *)> isSuitableRef) {
@@ -127,7 +127,7 @@ static string ObtainNextSuggestedSuffix(string currentPrefix, string currentSuff
 
 void TransformCmdLine(CmdLine &cmdLine, git_repository *repo) {
     string currentPrefix = w2mb(GetUserPrefix(cmdLine));
-    logFile << "User prefix = \"" << currentPrefix.c_str() << "\"" << endl;
+    *logFile << "User prefix = \"" << currentPrefix.c_str() << "\"" << endl;
 
     vector<string> suitableRefs;
     ObtainSuitableRefsByStrictPrefix(repo, currentPrefix, suitableRefs);
@@ -137,7 +137,7 @@ void TransformCmdLine(CmdLine &cmdLine, git_repository *repo) {
     }
 
     if (suitableRefs.empty()) {
-        logFile << "No suitable refs" << endl;
+        *logFile << "No suitable refs" << endl;
         return;
     }
 
@@ -146,21 +146,21 @@ void TransformCmdLine(CmdLine &cmdLine, git_repository *repo) {
     // TODO: sort by date if settings
 
     for_each(suitableRefs.begin(), suitableRefs.end(), [](string s) {
-        logFile << "Suitable ref: " << s.c_str() << endl;
+        *logFile << "Suitable ref: " << s.c_str() << endl;
     });
 
     string newPrefix = FindCommonPrefix(suitableRefs);
-    logFile << "Common prefix: " << newPrefix.c_str() << endl;
+    *logFile << "Common prefix: " << newPrefix.c_str() << endl;
 
     if (newPrefix != currentPrefix) {
         ReplaceUserPrefix(cmdLine, mb2w(newPrefix));
 
     } else {
         string currentSuffix = w2mb(GetSuggestedSuffix(cmdLine));
-        logFile << "currentSuffix = \"" << currentSuffix.c_str() << "\"" << endl;
+        *logFile << "currentSuffix = \"" << currentSuffix.c_str() << "\"" << endl;
 
         string newSuffix = ObtainNextSuggestedSuffix(currentPrefix, currentSuffix, suitableRefs);
-        logFile << "nextSuffx = \"" << newSuffix.c_str() << "\"" << endl;
+        *logFile << "nextSuffx = \"" << newSuffix.c_str() << "\"" << endl;
         ReplaceSuggestedSuffix(cmdLine, mb2w(newSuffix));
     }
 }

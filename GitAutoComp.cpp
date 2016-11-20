@@ -17,7 +17,7 @@
 
 using namespace std;
 
-wofstream logFile;
+wostream *logFile;
 
 static struct PluginStartupInfo Info;
 
@@ -31,9 +31,11 @@ void WINAPI GetGlobalInfoW(struct GlobalInfo *GInfo) {
 	GInfo->Author=PLUGIN_AUTHOR;
 
 #ifdef DEBUG
-    logFile.open("plugin_log.txt");
+    logFile = new wofstream("plugin_log.txt");
+#else
+    logFile = new wostream(nullptr);
 #endif
-    logFile << "I am started" << endl;
+    *logFile << "I am started" << endl;
     // TODO: add time
 
     git_libgit2_init();
@@ -50,10 +52,11 @@ void WINAPI GetGlobalInfoW(struct GlobalInfo *GInfo) {
 void WINAPI ExitFARW(const struct ExitInfo *EInfo) {
     git_libgit2_shutdown();
 
-    logFile << L"I am closed" << endl;
+    *logFile << L"I am closed" << endl;
 #ifdef DEBUG
-    logFile.close();
+    dynamic_cast<wofstream*>(logFile)->close();
 #endif
+    delete logFile;
 }
 
 const wchar_t *GetMsg(int MsgId) {
@@ -109,7 +112,7 @@ static wstring GetActivePanelDir() {
     Info.PanelControl(PANEL_ACTIVE, FCTL_GETPANELDIRECTORY, fpdSize, dir);
 
     if (wcslen(dir->File) != 0) {
-        logFile << "GetActivePanelDir, FCTL_GETPANELDIRECTORY()->File = " << dir->File << endl;
+        *logFile << "GetActivePanelDir, FCTL_GETPANELDIRECTORY()->File = " << dir->File << endl;
         return wstring(L"");
     }
 
@@ -119,41 +122,41 @@ static wstring GetActivePanelDir() {
 }
 
 HANDLE WINAPI OpenW(const struct OpenInfo *OInfo) {
-    logFile << endl << "I AM OPENED" << endl;
+    *logFile << endl << "I AM OPENED" << endl;
     if (OInfo->OpenFrom != OPEN_PLUGINSMENU) {
-        logFile << "OpenW, bad OpenFrom" << endl;
+        *logFile << "OpenW, bad OpenFrom" << endl;
         return INVALID_HANDLE_VALUE;
     }
 
     wstring curDir = GetActivePanelDir();
     if (curDir.empty()) {
-        logFile << "Bad current dir" << endl;
+        *logFile << "Bad current dir" << endl;
         return INVALID_HANDLE_VALUE;
     }
-    logFile << "curDir = " << curDir.c_str() << endl;
+    *logFile << "curDir = " << curDir.c_str() << endl;
 
     git_repository *repo = OpenGitRepo(curDir);
     if (repo == nullptr) {
-        logFile << "Git repo is not opened" << endl;
+        *logFile << "Git repo is not opened" << endl;
         return nullptr;
     }
 
     CmdLine cmdLine = GetCmdLine();
 
-    logFile << "Before transformation:" << endl;
-    logFile << "cmdLine = \"" << cmdLine.line.c_str() << "\"" << endl;
-    logFile << "cursor pos = " << cmdLine.curPos << endl;
-    logFile << "selection start = " << cmdLine.selectionStart << endl;
-    logFile << "selection end   = " << cmdLine.selectionEnd << endl;
+    *logFile << "Before transformation:" << endl;
+    *logFile << "cmdLine = \"" << cmdLine.line.c_str() << "\"" << endl;
+    *logFile << "cursor pos = " << cmdLine.curPos << endl;
+    *logFile << "selection start = " << cmdLine.selectionStart << endl;
+    *logFile << "selection end   = " << cmdLine.selectionEnd << endl;
 
     TransformCmdLine(cmdLine, repo);
     git_repository_free(repo);
 
-    logFile << "After transformation:" << endl;
-    logFile << "cmdLine = \"" << cmdLine.line.c_str() << "\"" << endl;
-    logFile << "cursor pos = " << cmdLine.curPos << endl;
-    logFile << "selection start = " << cmdLine.selectionStart << endl;
-    logFile << "selection end   = " << cmdLine.selectionEnd << endl;
+    *logFile << "After transformation:" << endl;
+    *logFile << "cmdLine = \"" << cmdLine.line.c_str() << "\"" << endl;
+    *logFile << "cursor pos = " << cmdLine.curPos << endl;
+    *logFile << "selection start = " << cmdLine.selectionStart << endl;
+    *logFile << "selection end   = " << cmdLine.selectionEnd << endl;
 
     SetCmdLine(cmdLine);
 

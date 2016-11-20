@@ -2,6 +2,6 @@
 
 #include <fstream>
 
-extern std::wofstream logFile;
+extern std::wostream *logFile;
 
 const wchar_t *GetMsg(int MsgId);
