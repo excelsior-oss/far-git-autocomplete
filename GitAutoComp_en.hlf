@@ -2,5 +2,18 @@
 .PluginContents=GitAutoComp
 
 @Contents
-$ #GitAutoComp#
-  This plugin ...
+$^#GitAutoComp#
+  This plugin completes names of Git branches and tags in the command line.
+
+  Let's assume that you have branches:
+  #master#
+  #foo/bar#
+  #foo/baz#
+  #origin/foo/qux#
+
+  The plugin completes:
+  #m# -> #master#
+  #f# -> #foo/#
+  #f/q# -> #foo/qux#
+
+  If there no more single completion (e.g. #foo/#) the plugin shows dialog with the list of all possible references.
