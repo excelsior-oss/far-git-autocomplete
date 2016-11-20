@@ -2,18 +2,47 @@
 .PluginContents=GitAutoComp
 
 @Contents
-$^#GitAutoComp#
-  This plugin completes names of Git branches and tags in the command line.
+$^#Git AutoComplete#
+    This plugin completes names of Git branches and tags in the command line.
 
-  Let's assume that you have branches:
-  #master#
-  #foo/bar#
-  #foo/baz#
-  #origin/foo/qux#
+    Let's assume that you have branches:
 
-  The plugin completes:
-  #m# -> #master#
-  #f# -> #foo/#
-  #f/q# -> #foo/qux#
+      #master#
+      #foo/bar#
+      #foo/baz#
+      #origin/foo/qux#
 
-  If there no more single completion (e.g. #foo/#) the plugin shows dialog with the list of all possible references.
+    The plugin completes:
+
+      #m# -> #master#
+      #fo# -> #foo/#
+
+    And even this (punctuation and upper case are treated like anchors):
+
+      #f/q# -> #foo/qux#
+
+    If there is no more single completion (e.g. #foo/#) the plugin shows dialog with the list of all possible references.
+
+    See also: ~Configuring~@Config@ the plugin
+
+
+@Config
+$^#Configuring Git AutoComplete#
+    There are following options:
+
+    #Show dialog#                    Show dialog with the list of all possible references.
+    #with references#                Otherwise they are suggested right in the command line.
+
+    #Complete remote references#     Complete remote references (e.g. "origin/foo")
+    #by their short name#            by their short name without remote name prefix (e.g. "foo").
+
+    Note that you can override these options for the single plugin invocation via macro command:
+
+      #Plugin.Call("89DF1D5B-F5BB-415B-993D-D34C5FFE049F", <option names in quotes>)#
+
+    Option names (enabled/disabled variant):
+
+      #SuggestionsDialog# / #InlineSuggestions#
+      #ShortRemoteName# / #FullRemoteName#
+
+    See also: ~Contents~@Contents@

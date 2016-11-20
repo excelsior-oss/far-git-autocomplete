@@ -145,9 +145,10 @@ void TransformCmdLine(const Options &options, CmdLine &cmdLine, git_repository *
 
     sort(suitableRefs.begin(), suitableRefs.end());
     suitableRefs.erase(unique(suitableRefs.begin(), suitableRefs.end()), suitableRefs.end());
-    if (!options.sortByName) {
-        *logFile << "FIXME: sorting by time is not implemented yet" << endl;
-    }
+    // TODO
+    //if (!options.sortByName) {
+    //    *logFile << "FIXME: sorting by time is not implemented yet" << endl;
+    //}
 
     for_each(suitableRefs.begin(), suitableRefs.end(), [](string s) {
         *logFile << "Suitable ref: " << s.c_str() << endl;

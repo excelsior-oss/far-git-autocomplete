@@ -5,6 +5,8 @@
 
 #include <plugin.hpp>
 #include <initguid.h>
+#include <PluginSettings.hpp>
+#include <DlgBuilder.hpp>
 #include <git2.h>
 
 #include "GitAutoCompLng.hpp"
@@ -20,6 +22,8 @@ using namespace std;
 wostream *logFile;
 
 struct PluginStartupInfo Info;
+
+static Options globalOptions;
 
 void WINAPI GetGlobalInfoW(struct GlobalInfo *GInfo) {
     GInfo->StructSize = sizeof(struct GlobalInfo);
@@ -63,8 +67,41 @@ const wchar_t *GetMsg(int MsgId) {
     return Info.GetMsg(&MainGuid,MsgId);
 }
 
+static const wchar_t *OPT_SHOW_DIALOG = L"ShowDialog";
+static const wchar_t *OPT_STRIP_REMOTE_NAME = L"StripRemoteName";
+
+static void LoadGlobalOptionsFromPluginSettings() {
+    PluginSettings settings(MainGuid, Info.SettingsControl);
+    globalOptions.showDialog = settings.Get(0, OPT_SHOW_DIALOG, true);
+    globalOptions.stripRemoteName = settings.Get(0, OPT_STRIP_REMOTE_NAME, true);
+}
+
+static void StoreGlobalOptionsToPluginSettings() {
+    PluginSettings settings(MainGuid, Info.SettingsControl);
+    settings.Set(0, OPT_SHOW_DIALOG, globalOptions.showDialog);
+    settings.Set(0, OPT_STRIP_REMOTE_NAME, globalOptions.stripRemoteName);
+}
+
 void WINAPI SetStartupInfoW(const struct PluginStartupInfo *psi) {
     Info = *psi;
+
+    LoadGlobalOptionsFromPluginSettings();
+}
+
+intptr_t WINAPI ConfigureW(const ConfigureInfo* CfgInfo) {
+    PluginDialogBuilder Builder(Info, MainGuid, DialogGuid, MTitle, L"Config");
+
+    Builder.AddCheckbox(MShowDialog, (int*)&globalOptions.showDialog);
+    Builder.AddCheckbox(MStripRemoteName, (int*)&globalOptions.stripRemoteName);
+
+    Builder.AddOKCancel(MOk, MCancel);
+
+    if (Builder.ShowDialog()) {
+        StoreGlobalOptionsToPluginSettings();
+        return true;
+    }
+
+    return false;
 }
 
 void WINAPI GetPluginInfoW(struct PluginInfo *PInfo) {
@@ -76,6 +113,12 @@ void WINAPI GetPluginInfoW(struct PluginInfo *PInfo) {
     PInfo->PluginMenu.Guids = &MenuGuid;
     PInfo->PluginMenu.Strings = PluginMenuStrings;
     PInfo->PluginMenu.Count = ARRAYSIZE(PluginMenuStrings);
+
+    static const wchar_t *PluginConfigStrings[1];
+    PluginConfigStrings[0] = GetMsg(MTitle);
+    PInfo->PluginConfig.Guids = &ConfigMenuGuid;
+    PInfo->PluginConfig.Strings = PluginConfigStrings;
+    PInfo->PluginConfig.Count = ARRAYSIZE(PluginConfigStrings);
 }
 
 static CmdLine GetCmdLine() {
@@ -122,24 +165,14 @@ static wstring GetActivePanelDir() {
     return result;
 }
 
-static void SetDefaultOptions(Options &options) {
-    options.showDialog = true;
-    options.sortByName = true;
-    options.stripRemoteName = true;
-}
-
 static void ParseOption(Options &options, const wstring &str) {
-    if (wstring(L"ShowDialog") == str) {
+    if (wstring(L"SuggestionsDialog") == str) {
         options.showDialog = true;
-    } else if (wstring(L"NoDialog") == str) {
+    } else if (wstring(L"InlineSuggestions") == str) {
         options.showDialog = false;
-    } else if (wstring(L"SortByName") == str) {
-        options.sortByName = true;
-    } else if (wstring(L"SortByTime") == str) {
-        options.sortByName = false;
-    } else if (wstring(L"StripRemoteName") == str) {
+    } else if (wstring(L"ShortRemoteName") == str) {
         options.stripRemoteName = true;
-    } else if (wstring(L"ShowRemoteName") == str) {
+    } else if (wstring(L"FullRemoteName") == str) {
         options.stripRemoteName = false;
     } else {
         *logFile << "Unknown option \"" << str << "\"" << endl;
@@ -147,7 +180,6 @@ static void ParseOption(Options &options, const wstring &str) {
 }
 
 static void ParseOptionsFromMacro(Options &options, OpenMacroInfo *MInfo) {
-    SetDefaultOptions(options);
     for (size_t i = 0; i < MInfo->Count; i++) {
         FarMacroValue value = MInfo->Values[i];
         if (value.Type != FMVT_STRING) {
@@ -161,17 +193,16 @@ static void ParseOptionsFromMacro(Options &options, OpenMacroInfo *MInfo) {
 HANDLE WINAPI OpenW(const struct OpenInfo *OInfo) {
     *logFile << "=====================================================" << endl;
 
-    Options options;
+    Options options = globalOptions;
     switch (OInfo->OpenFrom) {
         case OPEN_PLUGINSMENU:
             *logFile << "I am opened from plugins menu" << endl;
-            SetDefaultOptions(options);
             break;
 
         case OPEN_FROMMACRO: {
             // To record such macro: Ctrl + .; a; Ctrl + Shift + .; <hotkey>; enter one of following:
-            // Plugin.Call("89DF1D5B-F5BB-415B-993D-D34C5FFE049F", "ShowDialog", "SortByName", "StripRemoteName")
-            // Plugin.Call("89DF1D5B-F5BB-415B-993D-D34C5FFE049F", "NoDialog", "SortByTime", "ShowRemoteName")
+            // Plugin.Call("89DF1D5B-F5BB-415B-993D-D34C5FFE049F", "SuggestionsDialog", "ShortRemoteName", "SortByName")
+            // Plugin.Call("89DF1D5B-F5BB-415B-993D-D34C5FFE049F", "InlineSuggestions", "FullRemoteName", "SortByTime")
             *logFile << "I am opened from macro" << endl;
             ParseOptionsFromMacro(options, (OpenMacroInfo*)OInfo->Data);
             break;
@@ -183,7 +214,6 @@ HANDLE WINAPI OpenW(const struct OpenInfo *OInfo) {
     }
     *logFile << "options: "
         << "showDialog = " << options.showDialog << " "
-        << "sortByName = " << options.sortByName << " "
         << "stripRemoteName = " << options.stripRemoteName << endl;
 
     wstring curDir = GetActivePanelDir();

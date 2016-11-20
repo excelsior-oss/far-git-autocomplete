@@ -34,7 +34,7 @@ string ShowRefsDialog(vector<string> &suitableRefs) {
     })).length();
     
 
-    PluginDialogBuilder Builder(Info, MainGuid, DialogGuid, MTitle, nullptr, nullptr, nullptr, FDLG_KEEPCONSOLETITLE);
+    PluginDialogBuilder Builder(Info, MainGuid, DialogGuid, MTitle, L"Contents", nullptr, nullptr, FDLG_KEEPCONSOLETITLE);
     Builder.AddListBox(&selected,
         min(listBoxMaxWidth, maxRefLength + 3), min(listBoxMaxHeight, (int)refsCount - 1),
         (const wchar_t**)list, refsCount, DIF_LISTNOBOX);

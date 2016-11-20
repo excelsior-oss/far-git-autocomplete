@@ -6,9 +6,8 @@
 #include "CmdLine.hpp"
 
 typedef struct tOptions {
-    bool showDialog;
-    bool sortByName;
-    bool stripRemoteName;
+    int showDialog;
+    int stripRemoteName;
 } Options;
 
 git_repository* OpenGitRepo(std::wstring dir);
