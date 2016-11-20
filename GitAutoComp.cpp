@@ -131,7 +131,7 @@ HANDLE WINAPI OpenW(const struct OpenInfo *OInfo) {
     wstring curDir = GetActivePanelDir();
     if (curDir.empty()) {
         *logFile << "Bad current dir" << endl;
-        return INVALID_HANDLE_VALUE;
+        return nullptr;
     }
     *logFile << "curDir = " << curDir.c_str() << endl;
 
