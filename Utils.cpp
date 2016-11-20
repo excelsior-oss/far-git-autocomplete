@@ -1,4 +1,4 @@
-#include "Utils.hpp"
+﻿#include "Utils.hpp"
 
 #include <cassert>
 
@@ -53,5 +53,8 @@ void UtilsTest() {
 
     assert(string("def") == DropPrefix(string("abcdef"), string("abc")));
     assert(string("") == DropPrefix(string("abc"), string("abc")));
+
+    assert(wstring(L"Excelsior loves Far") == mb2w(string("Excelsior loves Far")));
+    assert(string("") == w2mb(wstring(L"Excelsior ❤ Far")));
 }
 #endif
