@@ -22,13 +22,13 @@ wostream *logFile;
 struct PluginStartupInfo Info;
 
 void WINAPI GetGlobalInfoW(struct GlobalInfo *GInfo) {
-	GInfo->StructSize=sizeof(struct GlobalInfo);
-	GInfo->MinFarVersion=PLUGIN_MIN_FAR_VERSION;
-	GInfo->Version=PLUGIN_VERSION;
-	GInfo->Guid=MainGuid;
-	GInfo->Title=PLUGIN_NAME;
-	GInfo->Description=PLUGIN_DESC;
-	GInfo->Author=PLUGIN_AUTHOR;
+    GInfo->StructSize = sizeof(struct GlobalInfo);
+    GInfo->MinFarVersion = PLUGIN_MIN_FAR_VERSION;
+    GInfo->Version = PLUGIN_VERSION;
+    GInfo->Guid = MainGuid;
+    GInfo->Title = PLUGIN_NAME;
+    GInfo->Description = PLUGIN_DESC;
+    GInfo->Author = PLUGIN_AUTHOR;
 
 #ifdef DEBUG
     logFile = new wofstream("plugin_log.txt");
@@ -60,21 +60,22 @@ void WINAPI ExitFARW(const struct ExitInfo *EInfo) {
 }
 
 const wchar_t *GetMsg(int MsgId) {
-	return Info.GetMsg(&MainGuid,MsgId);
+    return Info.GetMsg(&MainGuid,MsgId);
 }
 
 void WINAPI SetStartupInfoW(const struct PluginStartupInfo *psi) {
-	Info=*psi;
+    Info = *psi;
 }
 
 void WINAPI GetPluginInfoW(struct PluginInfo *PInfo) {
-	PInfo->StructSize=sizeof(*PInfo);
-	PInfo->Flags=PF_EDITOR;
-	static const wchar_t *PluginMenuStrings[1];
-	PluginMenuStrings[0]=GetMsg(MTitle);
-	PInfo->PluginMenu.Guids=&MenuGuid;
-	PInfo->PluginMenu.Strings=PluginMenuStrings;
-	PInfo->PluginMenu.Count=ARRAYSIZE(PluginMenuStrings);
+    PInfo->StructSize = sizeof(*PInfo);
+    PInfo->Flags = PF_NONE;
+
+    static const wchar_t *PluginMenuStrings[1];
+    PluginMenuStrings[0] = GetMsg(MTitle);
+    PInfo->PluginMenu.Guids = &MenuGuid;
+    PInfo->PluginMenu.Strings = PluginMenuStrings;
+    PInfo->PluginMenu.Count = ARRAYSIZE(PluginMenuStrings);
 }
 
 static CmdLine GetCmdLine() {
@@ -217,6 +218,6 @@ HANDLE WINAPI OpenW(const struct OpenInfo *OInfo) {
 
     SetCmdLine(cmdLine);
 
-	return nullptr;
+    return nullptr;
 }
 
