@@ -38,7 +38,7 @@ $^#Configuring Git AutoComplete#
 
     Note that you can override these options for the single plugin invocation via macro command:
 
-      #Plugin.Call("89DF1D5B-F5BB-415B-993D-D34C5FFE049F", <option names in quotes>)#
+      #Plugin.Call("89DF1D5B-F5BB-415B-993D-D34C5FFE049F", "Option 1", "Option 2", ...)#
 
     Option names (enabled/disabled variant):
 
