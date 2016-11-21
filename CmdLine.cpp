@@ -42,14 +42,16 @@ static pair<int, int> GetUserPrefixRange(const CmdLine &cmdLine) {
     return pair<int, int>(start, end);
 }
 
-wstring GetUserPrefix(const CmdLine &cmdLine) {
-    Range range = GetUserPrefixRange(cmdLine);
+static wstring GetRange(const CmdLine &cmdLine, Range range) {
     return cmdLine.line.substr(range.first, RangeLength(range));
 }
 
+wstring GetUserPrefix(const CmdLine &cmdLine) {
+    return GetRange(cmdLine, GetUserPrefixRange(cmdLine));
+}
+
 wstring GetSuggestedSuffix(const CmdLine &cmdLine) {
-    Range range = GetSuggestedSuffixRange(cmdLine);
-    return cmdLine.line.substr(range.first, RangeLength(range));
+    return GetRange(cmdLine, GetSuggestedSuffixRange(cmdLine));
 }
 
 static Range ReplaceRange(CmdLine &cmdLine, Range range, const wstring &str) {

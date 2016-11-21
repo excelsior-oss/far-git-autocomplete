@@ -167,6 +167,12 @@ void TransformCmdLine(const Options &options, CmdLine &cmdLine, git_repository *
             string selectedRef = ShowRefsDialog(suitableRefs);
             *logFile << "Dialog closed, selectedRef = \"" << selectedRef.c_str() << "\"" << endl;
             if (!selectedRef.empty()) {
+                // Use case: we iterate over branches with suggested suffixes
+                // but then we understand that we do not remember branch name
+                // and want to see them as dialog (via extra hotkey).
+                // In this case we should drop last suggested suffix.
+                ReplaceSuggestedSuffix(cmdLine, wstring(L""));
+
                 ReplaceUserPrefix(cmdLine, mb2w(selectedRef));
             }
 
