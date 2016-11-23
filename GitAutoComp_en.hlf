@@ -1,8 +1,9 @@
 ﻿.Language=English,English (English)
 .PluginContents=GitAutoComp
+.Options CtrlStartPosChar=^<wrap>
 
 @Contents
-$^#Git AutoComplete#
+$ #Git AutoComplete#
     This plugin completes names of Git branches and tags in the command line.
 
     Let's assume that you have branches:
@@ -21,22 +22,23 @@ $^#Git AutoComplete#
 
       #f/q# -> #foo/qux#
 
-    If there is no more single completion (e.g. #foo/#) the plugin shows dialog with the list of all possible references.
+    If there is no single completion (e.g. #foo/#) the plugin shows a dialog with the list of all possible references. Note that you could easily filter this list using ~standard command~@:MenuCmd@ #Ctrl-Alt-F#.
+
 
     See also: ~Configuring~@Config@ the plugin
 
 
 @Config
-$^#Configuring Git AutoComplete#
+$ #Configuring Git AutoComplete#
     There are following options:
 
-    #Show dialog#                    Show dialog with the list of all possible references.
-    #with references#                Otherwise they are suggested right in the command line.
+      #Show dialog#                    ^<wrap>Show dialog with the list of all possible references.
+      #with references#                Otherwise they are suggested right in the command line.
 
-    #Complete remote references#     Complete remote references (e.g. "origin/foo")
-    #by their short name#            by their short name without remote name prefix (e.g. "foo").
+      #Complete remote references#     ^<wrap>Complete remote references (e.g. "origin/foo")
+      #by their short name#            by their short name without remote name prefix (e.g. "foo").
 
-    Note that you can override these options for the single plugin invocation via macro command:
+    Note that you can override these options for the single plugin invocation via #Plugin.Call# function in ~macro command~@:KeyMacroSetting@:
 
       #Plugin.Call("89DF1D5B-F5BB-415B-993D-D34C5FFE049F", "Option 1", "Option 2", ...)#
 
@@ -44,5 +46,8 @@ $^#Configuring Git AutoComplete#
 
       #SuggestionsDialog# / #InlineSuggestions#
       #ShortRemoteName# / #FullRemoteName#
+
+    Also there is a handy option to iterate inline suggestions backwards: #ShowPreviousInlineSuggestion#.
+
 
     See also: ~Contents~@Contents@
