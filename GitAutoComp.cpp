@@ -10,8 +10,8 @@
 #include <git2.h>
 
 #include "GitAutoCompLng.hpp"
-#include "version.hpp"
-#include "guid.hpp"
+#include "Version.hpp"
+#include "Guid.hpp"
 #include "CmdLine.hpp"
 #include "Logic.hpp"
 #include "Trie.hpp"

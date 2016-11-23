@@ -4,7 +4,7 @@
 #include <cassert>
 
 #include "GitAutoComp.hpp"
-#include "guid.hpp"
+#include "Guid.hpp"
 #include "GitAutoCompLng.hpp"
 #include "Utils.hpp"
 
