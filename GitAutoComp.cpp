@@ -74,6 +74,7 @@ static void LoadGlobalOptionsFromPluginSettings() {
     PluginSettings settings(MainGuid, Info.SettingsControl);
     globalOptions.showDialog = settings.Get(0, OPT_SHOW_DIALOG, true);
     globalOptions.stripRemoteName = settings.Get(0, OPT_STRIP_REMOTE_NAME, true);
+    globalOptions.suggestNextSuffix = true; // it is always true in global options
 }
 
 static void StoreGlobalOptionsToPluginSettings() {
@@ -174,6 +175,8 @@ static void ParseOption(Options &options, const wstring &str) {
         options.stripRemoteName = true;
     } else if (wstring(L"FullRemoteName") == str) {
         options.stripRemoteName = false;
+    } else if (wstring(L"ShowPreviousInlineSuggestion") == str) {
+        options.suggestNextSuffix = false;
     } else {
         *logFile << "Unknown option \"" << str << "\"" << endl;
     }
@@ -214,7 +217,8 @@ HANDLE WINAPI OpenW(const struct OpenInfo *OInfo) {
     }
     *logFile << "options: "
         << "showDialog = " << options.showDialog << " "
-        << "stripRemoteName = " << options.stripRemoteName << endl;
+        << "stripRemoteName = " << options.stripRemoteName << " "
+        << "suggestNextSuffix = " << options.suggestNextSuffix << endl;
 
     wstring curDir = GetActivePanelDir();
     if (curDir.empty()) {

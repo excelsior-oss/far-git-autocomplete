@@ -77,7 +77,7 @@ static pair<Geometry, Geometry> CalculateListBoxAndDialogGeometry(size_t maxLine
     size_t dialogWidth = listBoxWidth + 4;
     size_t dialogHeight = listBoxHeight + 2;
 
-    // Some pretty padding for the maximum dialog:
+    // Some pretty double padding for the maximum dialog:
     SMALL_RECT farRect = GetFarRect();
     size_t dialogMaxWidth = (farRect.Right - farRect.Left + 1) - 8;
     size_t dialogMaxHeight = (farRect.Bottom - farRect.Top + 1) - 4;

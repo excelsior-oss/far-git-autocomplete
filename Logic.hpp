@@ -8,6 +8,7 @@
 typedef struct tOptions {
     int showDialog;
     int stripRemoteName;
+    int suggestNextSuffix;
 } Options;
 
 git_repository* OpenGitRepo(std::wstring dir);

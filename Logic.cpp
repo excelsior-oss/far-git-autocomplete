@@ -114,17 +114,15 @@ static string FindCommonPrefix(vector<string> &suitableRefs) {
     return maxCommonPrefix;
 }
 
-static string ObtainNextSuggestedSuffix(string currentPrefix, string currentSuffix, vector<string> &suitableRefs) {
-    auto it = find(suitableRefs.begin(), suitableRefs.end(), currentPrefix + currentSuffix);
-    if (it == suitableRefs.end()) {
-        it = suitableRefs.begin();
+static string ObtainNextSuggestedSuffix(bool forwardSearch, string currentPrefix, string currentSuffix, vector<string> &suitableRefs) {
+    size_t size = suitableRefs.size();
+    size_t idx = distance(suitableRefs.begin(), find(suitableRefs.begin(), suitableRefs.end(), currentPrefix + currentSuffix));
+    if (idx == size) {
+        idx = forwardSearch ? 0 : (size - 1);
     } else {
-        it++;
-        if (it == suitableRefs.end()) {
-            it = suitableRefs.begin();
-        }
+        idx = (idx + (forwardSearch ? 1 : -1) + size) % size;
     }
-    return DropPrefix(*it, currentPrefix);
+    return DropPrefix(suitableRefs[idx], currentPrefix);
 }
 
 void TransformCmdLine(const Options &options, CmdLine &cmdLine, git_repository *repo) {
@@ -180,7 +178,7 @@ void TransformCmdLine(const Options &options, CmdLine &cmdLine, git_repository *
             }
 
         } else {
-            string newSuffix = ObtainNextSuggestedSuffix(currentPrefix, currentSuffix, suitableRefs);
+            string newSuffix = ObtainNextSuggestedSuffix(options.suggestNextSuffix, currentPrefix, currentSuffix, suitableRefs);
             *logFile << "nextSuffx = \"" << newSuffix.c_str() << "\"" << endl;
             ReplaceSuggestedSuffix(cmdLine, mb2w(newSuffix));
         }
@@ -207,15 +205,19 @@ void LogicTest() {
 
     {
         vector<string> suitableRefs = { string("abcfoo"), string("abcxyz"), string("abcbar") };
-        assert(string("bar") == ObtainNextSuggestedSuffix(string("abc"), string("xyz"), suitableRefs));
-        assert(string("foo") == ObtainNextSuggestedSuffix(string("abc"), string("bar"), suitableRefs));
-        assert(string("foo") == ObtainNextSuggestedSuffix(string("abc"), string(""), suitableRefs));
+        assert(string("bar") == ObtainNextSuggestedSuffix(true,  string("abc"), string("xyz"), suitableRefs));
+        assert(string("foo") == ObtainNextSuggestedSuffix(true,  string("abc"), string("bar"), suitableRefs));
+        assert(string("foo") == ObtainNextSuggestedSuffix(true,  string("abc"), string(""), suitableRefs));
+        assert(string("foo") == ObtainNextSuggestedSuffix(false, string("abc"), string("xyz"), suitableRefs));
+        assert(string("bar") == ObtainNextSuggestedSuffix(false, string("abc"), string("foo"), suitableRefs));
+        assert(string("bar") == ObtainNextSuggestedSuffix(false,  string("abc"), string(""), suitableRefs));
     }
     {
         vector<string> suitableRefs = { string("abc"), string("abcxyz"), string("abcbar") };
-        assert(string("bar") == ObtainNextSuggestedSuffix(string("abc"), string("xyz"), suitableRefs));
-        assert(string("") == ObtainNextSuggestedSuffix(string("abc"), string("bar"), suitableRefs));
-        assert(string("xyz") == ObtainNextSuggestedSuffix(string("abc"), string(""), suitableRefs));
+        assert(string("")    == ObtainNextSuggestedSuffix(true,  string("abc"), string("bar"), suitableRefs));
+        assert(string("xyz") == ObtainNextSuggestedSuffix(true,  string("abc"), string(""), suitableRefs));
+        assert(string("bar") == ObtainNextSuggestedSuffix(false, string("abc"), string(""), suitableRefs));
+        assert(string("")    == ObtainNextSuggestedSuffix(false, string("abc"), string("xyz"), suitableRefs));
     }
 }
 #endif
