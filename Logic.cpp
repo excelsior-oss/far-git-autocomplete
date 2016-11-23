@@ -161,10 +161,13 @@ void TransformCmdLine(const Options &options, CmdLine &cmdLine, git_repository *
         ReplaceUserPrefix(cmdLine, mb2w(newPrefix));
 
     } else {
+        string currentSuffix = w2mb(GetSuggestedSuffix(cmdLine));
+        *logFile << "currentSuffix = \"" << currentSuffix.c_str() << "\"" << endl;
+
         if (options.showDialog) {
             // Yes, we show dialog even if there is only one suitable ref.
             *logFile << "Showing dialog..." << endl;
-            string selectedRef = ShowRefsDialog(suitableRefs);
+            string selectedRef = ShowRefsDialog(suitableRefs, currentPrefix + currentSuffix);
             *logFile << "Dialog closed, selectedRef = \"" << selectedRef.c_str() << "\"" << endl;
             if (!selectedRef.empty()) {
                 // Use case: we iterate over branches with suggested suffixes
@@ -177,9 +180,6 @@ void TransformCmdLine(const Options &options, CmdLine &cmdLine, git_repository *
             }
 
         } else {
-            string currentSuffix = w2mb(GetSuggestedSuffix(cmdLine));
-            *logFile << "currentSuffix = \"" << currentSuffix.c_str() << "\"" << endl;
-
             string newSuffix = ObtainNextSuggestedSuffix(currentPrefix, currentSuffix, suitableRefs);
             *logFile << "nextSuffx = \"" << newSuffix.c_str() << "\"" << endl;
             ReplaceSuggestedSuffix(cmdLine, mb2w(newSuffix));

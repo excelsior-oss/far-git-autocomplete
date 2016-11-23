@@ -23,16 +23,20 @@ static SMALL_RECT GetFarRect() {
     return farRect;
 }
 
-static FarListItem * InitializeListItems(const vector<string> &list) {
+static FarListItem * InitializeListItems(const vector<string> &list, const string &initiallySelectedItem) {
     size_t size = list.size();
     FarListItem *listItems = new FarListItem[size];
+    int initiallySelected = 0;
     for (size_t i = 0; i < size; ++i) {
         wstring wstr = mb2w(list[i]);
         listItems[i].Text = (const wchar_t *)wcsdup(wstr.c_str());
         listItems[i].Flags = LIF_NONE;
+        if (list[i] == initiallySelectedItem) {
+            initiallySelected = i;
+        }
     }
-    assert(size > 0);
-    listItems[0].Flags |= LIF_SELECTED;
+    assert(0 <= initiallySelected && initiallySelected < size);
+    listItems[initiallySelected].Flags |= LIF_SELECTED;
     return listItems;
 }
 
@@ -94,10 +98,10 @@ static pair<Geometry, Geometry> CalculateListBoxAndDialogGeometry(size_t maxLine
     return pair<Geometry, Geometry>(list, dialog);
 }
 
-static int ShowListAndGetSelected(vector<string> &list) {
+static int ShowListAndGetSelected(const vector<string> &list, const string &initiallySelectedItem) {
     FarList listDesc;
     listDesc.StructSize = sizeof(listDesc);
-    listDesc.Items = InitializeListItems(list);
+    listDesc.Items = InitializeListItems(list, initiallySelectedItem);
     listDesc.ItemsNumber = list.size();
 
     FarDialogItem listBox;
@@ -139,10 +143,10 @@ static int ShowListAndGetSelected(vector<string> &list) {
     return selected;
 }
 
-string ShowRefsDialog(vector<string> &suitableRefs) {
+string ShowRefsDialog(const vector<string> &suitableRefs, const string &initiallySelectedRef) {
     assert(!suitableRefs.empty());
 
-    int selected = ShowListAndGetSelected(suitableRefs);
+    int selected = ShowListAndGetSelected(suitableRefs, initiallySelectedRef);
     if (selected >= 0) {
         *logFile << "Dialog succeeded. Selected = " << selected << endl;
         assert(0 <= selected && selected < (int)suitableRefs.size());
