@@ -134,6 +134,38 @@
     <ClCompile Include="RefsDialog.cpp" />
     <ClCompile Include="Trie.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="CmdLine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GitAutoComp.cpp" />
+    <ClCompile Include="Logic.cpp" />
+    <ClCompile Include="RefsDialog.cpp" />
+    <ClCompile Include="Trie.cpp" />
+    <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="CmdLine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GitAutoComp.cpp" />
+    <ClCompile Include="Logic.cpp" />
+    <ClCompile Include="RefsDialog.cpp" />
+    <ClCompile Include="Trie.cpp" />
+    <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="CmdLine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GitAutoComp.cpp" />
+    <ClCompile Include="Logic.cpp" />
+    <ClCompile Include="RefsDialog.cpp" />
+    <ClCompile Include="Trie.cpp" />
+    <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="CmdLine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GitAutoComp.cpp" />
+    <ClCompile Include="Logic.cpp" />
+    <ClCompile Include="RefsDialog.cpp" />
+    <ClCompile Include="Trie.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GitAutoComp.hpp">
@@ -198,9 +230,7 @@
     <ClInclude Include="guid.hpp" />
     <ClInclude Include="Trie.hpp" />
     <ClInclude Include="version.hpp" />
-    <ClInclude Include="GitAutoComp.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="GitAutoComp.hpp" />
     <ClInclude Include="GitAutoCompLng.hpp" />
     <ClInclude Include="guid.hpp" />
     <ClInclude Include="Trie.hpp" />
@@ -271,6 +301,66 @@
     <ClInclude Include="GitAutoComp.hpp" />
     <ClInclude Include="GitAutoCompLng.hpp" />
     <ClInclude Include="guid.hpp" />
+    <ClInclude Include="Trie.hpp" />
+    <ClInclude Include="Utils.hpp" />
+    <ClInclude Include="version.hpp" />
+    <ClInclude Include="CmdLine.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GitAutoComp.hpp" />
+    <ClInclude Include="GitAutoCompLng.hpp" />
+    <ClInclude Include="guid.hpp" />
+    <ClInclude Include="Logic.hpp" />
+    <ClInclude Include="Trie.hpp" />
+    <ClInclude Include="Utils.hpp" />
+    <ClInclude Include="version.hpp" />
+    <ClInclude Include="CmdLine.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GitAutoComp.hpp" />
+    <ClInclude Include="GitAutoCompLng.hpp" />
+    <ClInclude Include="guid.hpp" />
+    <ClInclude Include="Logic.hpp" />
+    <ClInclude Include="Trie.hpp" />
+    <ClInclude Include="Utils.hpp" />
+    <ClInclude Include="version.hpp" />
+    <ClInclude Include="CmdLine.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GitAutoComp.hpp" />
+    <ClInclude Include="GitAutoCompLng.hpp" />
+    <ClInclude Include="guid.hpp" />
+    <ClInclude Include="Logic.hpp" />
+    <ClInclude Include="Trie.hpp" />
+    <ClInclude Include="Utils.hpp" />
+    <ClInclude Include="version.hpp" />
+    <ClInclude Include="CmdLine.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GitAutoComp.hpp" />
+    <ClInclude Include="GitAutoCompLng.hpp" />
+    <ClInclude Include="guid.hpp" />
+    <ClInclude Include="Logic.hpp" />
+    <ClInclude Include="Trie.hpp" />
+    <ClInclude Include="Utils.hpp" />
+    <ClInclude Include="version.hpp" />
+    <ClInclude Include="CmdLine.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GitAutoComp.hpp" />
+    <ClInclude Include="GitAutoCompLng.hpp" />
+    <ClInclude Include="guid.hpp" />
+    <ClInclude Include="Logic.hpp" />
+    <ClInclude Include="Trie.hpp" />
+    <ClInclude Include="Utils.hpp" />
+    <ClInclude Include="version.hpp" />
+    <ClInclude Include="CmdLine.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GitAutoComp.hpp" />
+    <ClInclude Include="GitAutoCompLng.hpp" />
+    <ClInclude Include="guid.hpp" />
+    <ClInclude Include="Logic.hpp" />
     <ClInclude Include="Trie.hpp" />
     <ClInclude Include="Utils.hpp" />
     <ClInclude Include="version.hpp" />
@@ -531,11 +621,13 @@
     </MASM>
   </ItemGroup>
   <ItemGroup>
-    <None Include="GitAutoComp_ru.lng">
+    <CustomBuild Include="GitAutoComp_en.lng">
       <Filter>Language Files</Filter>
-    </None>
-    <None Include="GitAutoComp_ru.hlf">
+    </CustomBuild>
+    <CustomBuild Include="GitAutoComp_ru.lng" />
+    <CustomBuild Include="GitAutoComp_en.hlf">
       <Filter>Help Files</Filter>
-    </None>
+    </CustomBuild>
+    <CustomBuild Include="GitAutoComp_ru.hlf" />
   </ItemGroup>
 </Project>

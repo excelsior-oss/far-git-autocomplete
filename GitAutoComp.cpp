@@ -89,7 +89,7 @@ void WINAPI SetStartupInfoW(const struct PluginStartupInfo *psi) {
 }
 
 intptr_t WINAPI ConfigureW(const ConfigureInfo* CfgInfo) {
-    PluginDialogBuilder Builder(Info, MainGuid, DialogGuid, MTitle, L"Config");
+    PluginDialogBuilder Builder(Info, MainGuid, ConfigDialogGuid, MTitle, L"Config");
 
     Builder.AddCheckbox(MShowDialog, &globalOptions.showDialog);
     Builder.AddCheckbox(MStripRemoteName, &globalOptions.stripRemoteName);
