@@ -26,7 +26,7 @@ static SMALL_RECT GetFarRect() {
 static FarListItem * InitializeListItems(const vector<string> &list, const string &initiallySelectedItem) {
     size_t size = list.size();
     FarListItem *listItems = new FarListItem[size];
-    int initiallySelected = 0;
+    size_t initiallySelected = 0;
     for (size_t i = 0; i < size; ++i) {
         wstring wstr = mb2w(list[i]);
         listItems[i].Text = (const wchar_t *)wcsdup(wstr.c_str());
@@ -35,7 +35,6 @@ static FarListItem * InitializeListItems(const vector<string> &list, const strin
             initiallySelected = i;
         }
     }
-    assert(0 <= initiallySelected && initiallySelected < size);
     listItems[initiallySelected].Flags |= LIF_SELECTED;
     return listItems;
 }
@@ -83,12 +82,12 @@ static pair<Geometry, Geometry> CalculateListBoxAndDialogGeometry(size_t maxLine
     size_t dialogMaxHeight = (farRect.Bottom - farRect.Top + 1) - 4;
 
     if (dialogWidth > dialogMaxWidth) {
-        int delta = dialogWidth - dialogMaxWidth;
+        size_t delta = dialogWidth - dialogMaxWidth;
         dialogWidth -= delta;
         listBoxWidth -= delta;
     }
     if (dialogHeight > dialogMaxHeight) {
-        int delta = dialogHeight - dialogMaxHeight;
+        size_t delta = dialogHeight - dialogMaxHeight;
         dialogHeight -= delta;
         listBoxHeight -= delta;
     }
@@ -127,11 +126,11 @@ static int ShowListAndGetSelected(const vector<string> &list, const string &init
     assert(dialogGeometry.left == -1 && dialogGeometry.top == -1); // auto centering
     HANDLE dialog = Info.DialogInit(&MainGuid, &RefsDialogGuid, -1, -1, dialogGeometry.width, dialogGeometry.height, L"Contents", items, itemsCount, 0, FDLG_NONE, nullptr, nullptr);
 
-    int runResult = Info.DialogRun(dialog);
+    int runResult = (int)Info.DialogRun(dialog);
 
     int selected;
     if (runResult != -1) {
-        selected = Info.SendDlgMessage(dialog, DM_LISTGETCURPOS, listBoxID, nullptr);
+        selected = (int)Info.SendDlgMessage(dialog, DM_LISTGETCURPOS, listBoxID, nullptr);
         assert(0 <= selected && selected < (int)listBox.ListItems->ItemsNumber);
     } else {
         selected = -1;
