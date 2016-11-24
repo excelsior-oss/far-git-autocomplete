@@ -9,20 +9,20 @@ $ #Git AutoComplete#
     Let's assume that you have branches:
 
       #master#
-      #foo/bar#
-      #foo/baz#
-      #origin/foo/qux#
+      #feature/inline-suggestions#
+      #feature/suggestions-dialog#
+      #origin/fix/help-typo#
 
     The plugin completes:
 
       #m# -> #master#
-      #fo# -> #foo/#
+      #fe# -> #feature/#
 
     And even this (punctuation and upper case are treated like anchors):
 
-      #f/q# -> #foo/qux#
+      #f/h# -> #fix/help-typo#
 
-    If there is no single completion (e.g. #foo/#) the plugin shows a dialog with the list of all possible references. Note that you could easily filter this list using ~standard command~@:MenuCmd@ #Ctrl-Alt-F#.
+    If there is no single completion (e.g. #feature/#) the plugin shows a dialog with the list of all possible references. Note that you could easily filter this list using ~standard command~@:MenuCmd@ #Ctrl-Alt-F#.
 
 
     See also: ~Configuring~@Config@ the plugin
@@ -35,8 +35,8 @@ $ #Configuring Git AutoComplete#
       #Show dialog#                    ^<wrap>Show dialog with the list of all possible references.
       #with references#                Otherwise they are suggested right in the command line.
 
-      #Complete remote references#     ^<wrap>Complete remote references (e.g. "origin/foo")
-      #by their short name#            by their short name without remote name prefix (e.g. "foo").
+      #Complete remote references#     ^<wrap>Complete remote references (e.g. "origin/fix/help-typo")
+      #by their short name#            by their short name without remote name prefix (e.g. "fix/help-typo").
 
     Note that you can override these options for the single plugin invocation via #Plugin.Call# function in ~macro command~@:KeyMacroSetting@:
 
