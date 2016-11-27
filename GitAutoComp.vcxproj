@@ -19,95 +19,31 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <PropertyGroup Condition="'$(Platform)'=='Win32'">
+    <Bitness>32</Bitness>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'">
+    <Bitness>64</Bitness>
+  </PropertyGroup>
   <PropertyGroup>
-    <ProjectName>gitautocomp</ProjectName>
+    <ProjectName>GitAutoComp</ProjectName>
     <ProjectGuid>{A0EEDB6F-87F0-459A-94FF-C683CE2CE8C1}</ProjectGuid>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <OutDir>plugins\$(ProjectName)</OutDir>
+    <TargetName>$(ProjectName)_$(Bitness)</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup>
     <PostBuildEventUseInBuild>
     </PostBuildEventUseInBuild>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <PostBuildEventUseInBuild>
-    </PostBuildEventUseInBuild>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PostBuildEventUseInBuild>
-    </PostBuildEventUseInBuild>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <PostBuildEventUseInBuild>
-    </PostBuildEventUseInBuild>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir)libgit2\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(ProjectDir)libgit2\lib\$(Platform)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>git2.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)libgit2\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>git2_$(Bitness).lib</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>
-      </Message>
-    </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)libgit2\include</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <AdditionalLibraryDirectories>$(ProjectDir)libgit2\lib\$(Platform)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>git2.lib</AdditionalDependencies>
-    </Link>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>
-      </Message>
-    </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)libgit2\include</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <AdditionalLibraryDirectories>$(ProjectDir)libgit2\lib\$(Platform)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>git2.lib</AdditionalDependencies>
-    </Link>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>
-      </Message>
-    </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)libgit2\include</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <AdditionalLibraryDirectories>$(ProjectDir)libgit2\lib\$(Platform)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>git2.lib</AdditionalDependencies>
-    </Link>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>
-      </Message>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ImportGroup Label="PropertySheets">
     <Import Project="$(ProjectDir)..\..\_build\vc\config\common.props" />
@@ -115,19 +51,10 @@
   <ItemDefinitionGroup>
     <PostBuildEvent>
       <Message>Copy libgit2</Message>
-      <Command>xcopy /y "$(ProjectDir)libgit2\lib\$(Platform)\git2.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y "$(ProjectDir)libgit2\lib\git2_$(Bitness).dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <ClCompile>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4530;4577;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4530;4577;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4530;4577;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4530;4577;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4530;4577;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
   </ItemDefinitionGroup>
 </Project>
