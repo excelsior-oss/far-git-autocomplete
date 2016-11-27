@@ -37,11 +37,11 @@ mkdir dist
 pushd dist
 
 mkdir 32
-xcopy /i ..\..\..\_build\vc\_output\product\Release.Win32.v14.0\plugins\GitAutoComp 32\GitAutoComp
+xcopy /i ..\build\product\Release.Win32.v14.0\plugins\GitAutoComp 32\GitAutoComp
 del 32\GitAutoComp\*.map 32\GitAutoComp\*.pdb
 
 mkdir 64
-xcopy /i ..\..\..\_build\vc\_output\product\Release.x64.v14.0\plugins\GitAutoComp 64\GitAutoComp
+xcopy /i ..\build\product\Release.x64.v14.0\plugins\GitAutoComp 64\GitAutoComp
 del 64\GitAutoComp\*.map 64\GitAutoComp\*.pdb
 
 mkdir universal

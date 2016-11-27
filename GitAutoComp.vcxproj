@@ -46,7 +46,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ImportGroup Label="PropertySheets">
-    <Import Project="$(ProjectDir)..\..\_build\vc\config\common.props" />
+    <Import Project="$(ProjectDir)far3sdk\common.props" />
   </ImportGroup>
   <ItemDefinitionGroup>
     <PostBuildEvent>

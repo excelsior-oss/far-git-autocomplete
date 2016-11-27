@@ -1,4 +1,4 @@
-LIBRARY        GitAutoComp
+LIBRARY        GitAutoComp_64
 ; DESCRIPTION    'GitAutoComp Far Plugin'
 EXPORTS
   GetGlobalInfoW
