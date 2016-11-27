@@ -41,7 +41,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)libgit2\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(ProjectDir)libgit2\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)libgit2\build_$(Bitness)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>git2_$(Bitness).lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -51,7 +51,7 @@
   <ItemDefinitionGroup>
     <PostBuildEvent>
       <Message>Copy libgit2</Message>
-      <Command>xcopy /y "$(ProjectDir)libgit2\lib\git2_$(Bitness).dll" "$(OutDir)"</Command>
+      <Command>xcopy /y "$(ProjectDir)libgit2\build_$(Bitness)\$(Configuration)\git2_$(Bitness).dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <ClCompile>
       <DisableSpecificWarnings>4530;4577;%(DisableSpecificWarnings)</DisableSpecificWarnings>
