@@ -1,0 +1,10 @@
+Far Manager sources are available at http://farmanager.com/svn/trunk
+Last checked out revision is 14653
+
+* include directory contains headers from <far-sources>\plugins\common\unicode
+
+* vc_crt_fix directory contains files <far-sources>\plugins\common\vc_crt_fix*
+
+* common.filters and common.props are copied from <far-sources>\_build\vc\config
+  with our patches
+
