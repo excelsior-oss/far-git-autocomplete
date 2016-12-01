@@ -21,9 +21,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="UserMacros">
-    <SrcRoot>$(MSBuildThisFileDirectory)..\..\..\</SrcRoot>
     <CurPath>$(Configuration).$(Platform).v$(VisualStudioVersion)\$(OutDir)</CurPath>
-    <OutputsRoot>$(ProjectDir)build\</OutputsRoot>
+    <OutputsRoot>$(ProjectDir)..\build\</OutputsRoot>
   </PropertyGroup>
   <PropertyGroup>
     <RootNamespace>$(ProjectName)</RootNamespace>
@@ -45,7 +44,7 @@
   <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)far3sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\far3sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NOMINMAX;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;_CRT_STDIO_LEGACY_WIDE_SPECIFIERS;_WIN32_WINNT=0x0600;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
       <AdditionalOptions> /J</AdditionalOptions>
@@ -66,7 +65,7 @@
       <ImportLibrary>$(IntDir)$(ProjectName).lib</ImportLibrary>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)far3sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\far3sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
 
@@ -129,11 +128,11 @@
   <ItemGroup>
     <ClCompile Include="*.cpp" />
     <ClCompile Include="*.c" />
-    <MASM Include="$(ProjectDir)far3sdk\vc_crt_fix\vc_crt_fix.asm">
+    <MASM Include="$(ProjectDir)..\far3sdk\vc_crt_fix\vc_crt_fix.asm">
       <Message>%(Identity)</Message>
       <ExcludedFromBuild Condition="'$(Platform)'=='x64'">true</ExcludedFromBuild>
     </MASM>
-    <ClCompile Include="$(ProjectDir)far3sdk\vc_crt_fix\vc_crt_fix_impl.cpp">
+    <ClCompile Include="$(ProjectDir)..\far3sdk\vc_crt_fix\vc_crt_fix_impl.cpp">
       <ExcludedFromBuild Condition="'$(Platform)'=='x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClInclude Include="*.hpp" />

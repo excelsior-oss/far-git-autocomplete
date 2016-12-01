@@ -25,10 +25,14 @@ popd
 
 REM Building plugin
 
+pushd src
+
 msbuild /p:Configuration=Debug /p:Platform=x86
 msbuild /p:Configuration=Release /p:Platform=x86
 msbuild /p:Configuration=Debug /p:Platform=x64
 msbuild /p:Configuration=Release /p:Platform=x64
+
+popd
 
 
 REM Building distribs
