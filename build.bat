@@ -47,6 +47,9 @@ pushd 32 && zip -r ..\GitAutocomplete-32.zip . && popd
 pushd 64 && zip -r ..\GitAutocomplete-64.zip . && popd
 pushd universal && zip -r ..\GitAutocomplete-universal.zip . && popd
 
+call :build_plugring 32 ..\build\product\Release.Win32.v14.0
+call :build_plugring 64 ..\build\product\Release.x64.v14.0
+
 popd
 
 goto :EOF
@@ -55,11 +58,26 @@ goto :EOF
 set BITNESS=%1
 set BUILD_DIR=%2
 
-xcopy /i %BUILD_DIR%\plugins\GitAutocomplete %BITNESS%\Plugins\GitAutocomplete
-del %BITNESS%\Plugins\GitAutocomplete\*.map
-del %BITNESS%\Plugins\GitAutocomplete\*.pdb
-xcopy ..\SampleMacro.lua %BITNESS%\Macros\scripts\
-ren %BITNESS%\Macros\scripts\SampleMacro.lua GitAutocomplete.lua
-xcopy /i /e /y %BITNESS% universal
+set DST=%BITNESS%
+
+xcopy /i %BUILD_DIR%\plugins\GitAutocomplete %DST%\Plugins\GitAutocomplete
+del %DST%\Plugins\GitAutocomplete\*.map
+del %DST%\Plugins\GitAutocomplete\*.pdb
+xcopy ..\SampleMacro.lua %DST%\Macros\scripts\
+ren %DST%\Macros\scripts\SampleMacro.lua GitAutocomplete.lua
+xcopy /i /e /y %DST% universal
+
+goto :EOF
+
+:build_plugring
+set BITNESS=%1
+set BUILD_DIR=%2
+
+set DST=%BITNESS%-plugring
+
+xcopy /i %BUILD_DIR%\plugins\GitAutocomplete %DST%
+del %DST%\*.map
+del %DST%\*.pdb
+pushd %DST% && zip -r ..\GitAutocomplete-%BITNESS%-plugring.zip . && popd
 
 goto :EOF
