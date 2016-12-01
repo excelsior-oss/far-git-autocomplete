@@ -3,7 +3,7 @@ About Git Autocomplete
 
 This Far Manager plugin allows you to easily type names of Git references (branches and tags) via autocompletion and listing of all suitable references:
 
-![Demo](https://github.com/excelsior-oss/far-git-autocomplete/raw/master/demo.gif)
+![Demo](demo.gif)
 
 Plugin has some settings, see configuration (`F9` - `Options` - `Plugins configuration` - `Git Autocomplete`) and help (`F1`).
 
