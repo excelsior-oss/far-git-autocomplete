@@ -1,0 +1,53 @@
+﻿.Language=English,English (English)
+.PluginContents=GitAutocomplete
+.Options CtrlStartPosChar=^<wrap>
+
+@Contents
+$ #Git Autocomplete#
+    This plugin completes names of Git branches and tags in the command line.
+
+    Let's assume that you have branches:
+
+      #master#
+      #feature/inline-suggestions#
+      #feature/suggestions-dialog#
+      #origin/fix/help-typo#
+
+    The plugin completes:
+
+      #m# -> #master#
+      #fe# -> #feature/#
+
+    And even this (punctuation and upper case are treated like anchors):
+
+      #f/h# -> #fix/help-typo#
+
+    If there is no single completion (e.g. #feature/#) the plugin shows a dialog with the list of all possible references. Note that you could easily filter this list using ~standard command~@:MenuCmd@ #Ctrl-Alt-F#.
+
+
+    See also: ~Configuring~@Config@ the plugin
+
+
+@Config
+$ #Configuring Git Autocomplete#
+    There are following options:
+
+      #Show dialog#                    ^<wrap>Show dialog with the list of all possible references.
+      #with references#                Otherwise they are suggested right in the command line.
+
+      #Complete remote references#     ^<wrap>Complete remote references (e.g. "origin/fix/help-typo")
+      #by their short name#            by their short name without remote name prefix (e.g. "fix/help-typo").
+
+    Note that you can override these options for the single plugin invocation via #Plugin.Call# function in ~macro command~@:KeyMacroSetting@:
+
+      #Plugin.Call("89DF1D5B-F5BB-415B-993D-D34C5FFE049F", "Option 1", "Option 2", ...)#
+
+    Option names (enabled/disabled variant):
+
+      #SuggestionsDialog# / #InlineSuggestions#
+      #ShortRemoteName# / #FullRemoteName#
+
+    Also there is a handy option to iterate inline suggestions backwards: #ShowPreviousInlineSuggestion#.
+
+
+    See also: ~Contents~@Contents@
