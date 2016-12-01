@@ -36,16 +36,26 @@ REM Building distribs
 mkdir dist
 pushd dist
 
-mkdir 32
-xcopy /i ..\build\product\Release.Win32.v14.0\plugins\GitAutoComp 32\GitAutoComp
-del 32\GitAutoComp\*.map 32\GitAutoComp\*.pdb
+call :build_dist 32 ..\build\product\Release.Win32.v14.0
+call :build_dist 64 ..\build\product\Release.x64.v14.0
 
-mkdir 64
-xcopy /i ..\build\product\Release.x64.v14.0\plugins\GitAutoComp 64\GitAutoComp
-del 64\GitAutoComp\*.map 64\GitAutoComp\*.pdb
-
-mkdir universal
-xcopy /i /e /y 32 universal
-xcopy /i /e /y 64 universal
+pushd 32 && zip -r ..\GitAutoComp-32.zip . && popd
+pushd 64 && zip -r ..\GitAutoComp-64.zip . && popd
+pushd universal && zip -r ..\GitAutoComp.zip . && popd
 
 popd
+
+goto :EOF
+
+:build_dist
+set BITNESS=%1
+set BUILD_DIR=%2
+
+xcopy /i %BUILD_DIR%\plugins\GitAutoComp %BITNESS%\Plugins\GitAutoComp
+del %BITNESS%\Plugins\GitAutoComp\*.map
+del %BITNESS%\Plugins\GitAutoComp\*.pdb
+xcopy ..\SampleMacro.lua %BITNESS%\Macros\scripts\
+ren %BITNESS%\Macros\scripts\SampleMacro.lua GitAutoComp.lua
+xcopy /i /e /y %BITNESS% universal
+
+goto :EOF
