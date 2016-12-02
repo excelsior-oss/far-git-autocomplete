@@ -27,7 +27,7 @@ To build the plugin and dependent [libgit2 library](https://libgit2.github.com/)
 
 *   Git
 *   CMake
-*   Microsoft Visual Studio 2015 or higher
+*   Microsoft Visual Studio Community 2015 or higher
 *   zip
 
 Download the sources:
