@@ -124,7 +124,7 @@ static int ShowListAndGetSelected(const vector<string> &list, const string &init
     int listBoxID = 0;
 
     assert(dialogGeometry.left == -1 && dialogGeometry.top == -1); // auto centering
-    HANDLE dialog = Info.DialogInit(&MainGuid, &RefsDialogGuid, -1, -1, dialogGeometry.width, dialogGeometry.height, L"Contents", items, itemsCount, 0, FDLG_NONE, nullptr, nullptr);
+    HANDLE dialog = Info.DialogInit(&MainGuid, &RefsDialogGuid, -1, -1, dialogGeometry.width, dialogGeometry.height, L"Contents", items, itemsCount, 0, FDLG_KEEPCONSOLETITLE, nullptr, nullptr);
 
     int runResult = (int)Info.DialogRun(dialog);
 
