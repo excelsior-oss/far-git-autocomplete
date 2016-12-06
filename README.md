@@ -20,6 +20,8 @@ This shall place:
 A macro command is required for invoking the plugin with a hotkey. The default one is `Ctrl+G`.
 You can create additional macro commands to invoke the plugin with different settings; see help for details.
 
+Alternatively you may download and update the plugin via [PlugRing](http://plugring.farmanager.com/plugin.php?pid=967).
+
 Building from source
 ====================
 
