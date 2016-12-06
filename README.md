@@ -1,7 +1,7 @@
 About Git Autocomplete
 ======================
 
-This [Far Manager](http://farmanager.com/) plugin enables you to quckly substitute names of Git references (branches and tags) into the command line using autocompletion and selection:
+This [Far Manager](http://farmanager.com/) plugin enables you to quickly substitute names of Git references (branches and tags) into the command line using autocompletion and selection:
 
 ![Demo](demo.gif)
 
