@@ -46,7 +46,7 @@ The plugin will be in the `dist` directory.
 Credits
 =======
 
-The plugin was originally developed by [Vladimir Parfinenko](https://github.com/cypok) and [Ivan Kireev](https://github.com/ivan2804) during the fifth annual [Excelsior Hack Day](https://www.excelsior-usa.com/blog/news/hack-day-i/).
+The plugin was originally developed by [Vladimir Parfinenko](https://github.com/cypok) and [Ivan Kireev](https://github.com/ivan2804) during the fifth annual [Excelsior Hack Day](https://www.excelsior-usa.com/blog/open-source/from-excelsior-hack-day-v-git-autocomplete-plugin-for-far-manager/).
 
 Released under the MIT/X11 license, see LICENSE.
 
